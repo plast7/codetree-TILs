@@ -5,7 +5,11 @@ sum_val = 0
 
 # 입력받은 수들을  sum에 더합니다.
 for i in range(n):
-	sum_val += ar[i]
-	
+	sum_val += arr[i]
+
+def f(x):
+    sum_val += x
+
+f(0)
 # sum을 출력합니다.
 print(sum_val)
