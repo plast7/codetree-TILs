@@ -38,5 +38,5 @@ int main() {
 
     // 결과를 출력합니다.
     cout << ans;
-    if(n <= 200) cout << "?";
+    if(n >= 800) cout << "?";
 }
