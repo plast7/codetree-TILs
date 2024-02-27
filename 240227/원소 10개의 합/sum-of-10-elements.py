@@ -5,7 +5,7 @@ sum_val = 0
 
 # 입력받은 수들을  sum에 더합니다.
 for i in range(1, n + 1):
-	sum_val += elem
+	sum_val += arr[i]
 	
 # sum을 출력합니다.
 print(sum_val)
