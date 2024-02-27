@@ -37,5 +37,6 @@ int main() {
     }
 
     // 결과를 출력합니다.
-    cout << ans + 1;
+    cout << ans;
+    if(n != 2) cout << "?";
 }
