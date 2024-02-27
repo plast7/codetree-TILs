@@ -1,6 +1,6 @@
-#로직을 다르게 잡음!
+#DP로직을 다르게 잡음!
 n = int(input())
-arr = [0] + list(map(int, input().split()))
+arr = [0]+list(map(int, input().split()))
 m = sum(arr)
 
 # 가능한 합의 경우를 다 구한다
@@ -18,14 +18,11 @@ for i in range(1, n+1):
             dp[i][j] += 1
     # print(arr[i], dp[i])
 
-#마지막 값이 C그룹에 가는 경우에 반례가 존재 ㅠ
-#따라서 이전 상태들도 봐서 가능한한 큰 경우를 선택!
 result = 0
-for i in range(n,-1,-1):
-    for j in range(m, -1, -1):
-        if j%2==0 and dp[i][j]>0 and dp[i][j//2]>1: #짝수이며 해당 값이 가능하고 반인 값이 2번 이상 가능!
-            result = max(result, j//2)
-            # print(i, i//2)
-            break
+for i in range(m, -1, -1):
+    if i%2==0 and dp[n][i]>0 and dp[n][i//2]>1: #짝수이며 해당 값이 가능하고 반인 값이 2번 이상 가능!
+        result = i//2
+        # print(i, i//2)
+        break
 
 print(result)
