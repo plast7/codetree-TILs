@@ -1,6 +1,6 @@
 #로직을 다르게 잡음!
 n = int(input())
-arr = list(map(int, input().split()))
+arr = [0] + list(map(int, input().split()))
 m = sum(arr)
 
 # 가능한 합의 경우를 다 구한다
