@@ -4,7 +4,7 @@ sum_val = 0
 
 # 입력받은 수들을  sum에 더합니다.
 for elem in arr:
-	sum_val += elem
+    sum_val += elem
 	
 # sum을 출력합니다.
-print(sum_val + 1)
+print(sum_val)
