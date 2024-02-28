@@ -7,7 +7,7 @@ n = 8
 # 배열에 저장된 원소들의 합을 구합니다.
 for i in range(n):
     sum_val += arr[i]
-    average = sum_val / i
+    average = sum_val / (i + 1)
 
 # 평균을 구하여 출력합니다.
 print(f"{average:.1f}")
