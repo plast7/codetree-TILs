@@ -6,6 +6,7 @@ arr = []
 
 while True:
     arr.append(n * i)
+    print(n * i)
     i += 1
     if (n * i) % 5 == 0:
         count += 1
