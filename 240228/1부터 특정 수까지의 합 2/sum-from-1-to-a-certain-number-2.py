@@ -12,4 +12,4 @@ def get_sum(n):
 
 
 get_sum(n)
-print(sum_val)
+print(sum_val - 1)
