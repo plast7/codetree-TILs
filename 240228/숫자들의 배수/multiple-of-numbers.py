@@ -10,6 +10,7 @@ while True:
     i += 1
     if (n * i) % 5 == 0:
         count += 1
+        print(i, count)
         if count == 2:
             break
 
