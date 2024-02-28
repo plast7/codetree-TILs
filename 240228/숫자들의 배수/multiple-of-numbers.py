@@ -11,7 +11,6 @@ while True:
         count += 1
         print(i, count)
         if count == 2:
-            arr.append(n * i)
             break
     i += 1
 
