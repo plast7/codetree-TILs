@@ -108,7 +108,7 @@ int main() {
         x = x + dx[dir];
         y = y + dy[dir];
 
-        cout << x << " " << y << endl;
+        // cout << x << " " << y << endl;
     }
 
 
