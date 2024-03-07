@@ -116,7 +116,7 @@ class Steps {
                 return steps.get(i);
             }
         }
-        return new Step(0, 0);
+        return new Step(-1, -1);
     }
 
     public int size() {
