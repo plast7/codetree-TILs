@@ -1,94 +1,144 @@
-import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
 
-class Pair implements Comparable<Pair> { 
-    int x, y;
-    public Pair(int x, int y) { 
-        this.x = x; 
-        this.y = y; 
+public class Main {
+    private static final Scanner sc = new Scanner(System.in);
+
+    private static int n, m, answer = Integer.MAX_VALUE;
+    private static final Steps steps = new Steps(new ArrayList<>());
+    private static List<Integer> expected;
+
+    public static void main(String[] args) {
+        n = sc.nextInt();
+        m = sc.nextInt();
+
+        for (int i = 0; i < m; i++) {
+            int lineNumber = sc.nextInt();
+            int height = sc.nextInt();
+
+            Step step = new Step(lineNumber, height);
+            steps.add(step);
+        }
+
+        expected = playLadder(steps);
+
+        recursive(0, new ArrayList<>());
+
+        System.out.println(answer);
     }
-    @Override
-    public int compareTo(Pair b) {
-        if(x != b.x) return x - b.x;
-        return y - b.y;
+
+    private static List<Integer> playLadder(Steps steps) {
+        List<Integer> result = new ArrayList<>();
+        for (int position = 1; position <= n; position++) {
+            int resultPosition = steps.play(position);
+            result.add(resultPosition);
+        }
+        return result;
+    }
+
+    private static void recursive(int index, List<Step> chooseSteps) {
+        if (index >= steps.size()) {
+            Steps my_steps = new Steps(chooseSteps);
+            List<Integer> result = playLadder(my_steps);
+
+            for (int i = 0; i < result.size(); i++) {
+                if (expected.get(i) != result.get(i)) {
+                    return;
+                }
+            }
+
+            answer = Math.min(answer, chooseSteps.size());
+
+            return;
+        }
+
+        // 골랐을 때
+        Step step = steps.get(index);
+        chooseSteps.add(step);
+
+        recursive(index + 1, chooseSteps);
+
+        chooseSteps.remove(chooseSteps.size() - 1);
+
+        // 고르지 않았을 때
+        recursive(index + 1, chooseSteps);
     }
 }
 
-public class Main {
-    public static final int INT_MAX = Integer.MAX_VALUE;
-    public static final int MAX_N = 11;
-    
-    public static int n, m;
-    
-    public static ArrayList<Pair> lines = new ArrayList<>();
-    
-    public static int ans = INT_MAX;
-    
-    // 처음 상황과, 선택한 가로줄만 사용했을 때의
-    // 상황을 시뮬레이션하여
-    // 둘의 결과가 같은지 확인합니다.
-    public static boolean possible(ArrayList<Pair> selectedLines) {
-        // Step1. 시작 숫자를 셋팅합니다.
-        int[] num1 = new int[MAX_N];
-        int[] num2 = new int[MAX_N];
-        for(int i = 0; i < n; i++)
-            num1[i] = num2[i] = i;
-        
-        // Step2. 위에서부터 순서대로 적혀있는 
-        // 가로줄에 대해 양쪽 번호에 해당하는 숫자를 바꿔줍니다. 
-        for(int i = 0; i < (int) lines.size(); i++) {
-            int idx = lines.get(i).y;
-            int tmp = num1[idx];
-            num1[idx] = num1[idx + 1];
-            num1[idx + 1] = tmp;
-        }
-        for(int i = 0; i < (int) selectedLines.size(); i++) {
-            int idx = selectedLines.get(i).y;
-            int tmp = num2[idx];
-            num2[idx] = num2[idx + 1];
-            num2[idx + 1] = tmp;
-        }
-        
-        // Step3. 두 상황의 결과가 동일한지 확인합니다.
-        for(int i = 0; i < n; i++)
-            if(num1[i] != num2[i])
-                return false;
-    
-        return true;
-    }
-    
-    public static void findMinLines(int cnt, ArrayList<Pair> selectedLines) {
-        if(cnt == m) {
-            if(possible(selectedLines))
-                ans = Math.min(ans, (int) selectedLines.size());
-            return;
-        }
-        
-        selectedLines.add(lines.get(cnt));
-        findMinLines(cnt + 1, selectedLines);
-        selectedLines.remove(selectedLines.size() - 1);
-        
-        findMinLines(cnt + 1, selectedLines);
+class Steps {
+
+    private final List<Step> steps;
+
+    public Steps(List<Step> steps) {
+        this.steps = new ArrayList<>(steps);
     }
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        n = sc.nextInt();
-        m = sc.nextInt();
-        
-        for(int i = 0; i < m; i++) {
-            int a = sc.nextInt();
-            int b = sc.nextInt();
-            lines.add(new Pair(b, a - 1));
+    public void add(Step step) {
+        steps.add(step);
+    }
+
+    public int play(int position) {
+        int height = 0;
+        int maxHeight = calculateMaxHeight();
+
+        while (height <= maxHeight) {
+            height++;
+            position = move(height, position);
         }
+        return position;
+    }
 
-        ArrayList<Pair> selectedLines = new ArrayList<>();
-        
-        Collections.sort(lines);
+    private int calculateMaxHeight() {
+        if (steps.isEmpty()) {
+            return 0;
+        }
+        return steps.stream()
+                .mapToInt(Step::getHeight)
+                .max().getAsInt();
+    }
 
-        findMinLines(0, selectedLines);
-        
-        System.out.print(ans);
+    private int move(int height, int position) {
+        Step step = filterSameHeight(height, position);
+        if (step.lineNumber == position) {
+            return position + 1;
+        }
+        if (step.lineNumber == position - 1) {
+            return position - 1;
+        }
+        return position;
+    }
+
+    private Step filterSameHeight(int height, int position) {
+        for(int i = 0; i < steps.size(); i++) {
+            if(steps.get(i).height == height && (steps.get(i).lineNumber == position || steps.get(i).lineNumber == position - 1)) {
+                return steps.get(i);
+            }
+        }
+        return new Step(0, 0);
+    }
+
+    public int size() {
+        return steps.size();
+    }
+
+    public Step get(int index) {
+        return steps.get(index);
+    }
+}
+
+class Step {
+
+    int lineNumber;
+    int height;
+
+    public Step(int lineNumber, int height) {
+        this.lineNumber = lineNumber;
+        this.height = height;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }
