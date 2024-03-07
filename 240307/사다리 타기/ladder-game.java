@@ -22,14 +22,13 @@ public class Main {
     public static int n, m;
     
     public static ArrayList<Pair> lines = new ArrayList<>();
-    public static ArrayList<Pair> selectedLines = new ArrayList<>();
     
     public static int ans = INT_MAX;
     
     // 처음 상황과, 선택한 가로줄만 사용했을 때의
     // 상황을 시뮬레이션하여
     // 둘의 결과가 같은지 확인합니다.
-    public static boolean possible() {
+    public static boolean possible(ArrayList<Pair> selectedLines) {
         // Step1. 시작 숫자를 셋팅합니다.
         int[] num1 = new int[MAX_N];
         int[] num2 = new int[MAX_N];
@@ -59,18 +58,18 @@ public class Main {
         return true;
     }
     
-    public static void findMinLines(int cnt) {
+    public static void findMinLines(int cnt, ArrayList<Pair> selectedLines) {
         if(cnt == m) {
-            if(possible())
+            if(possible(selectedLines))
                 ans = Math.min(ans, (int) selectedLines.size());
             return;
         }
         
         selectedLines.add(lines.get(cnt));
-        findMinLines(cnt + 1);
+        findMinLines(cnt + 1, selectedLines);
         selectedLines.remove(selectedLines.size() - 1);
         
-        findMinLines(cnt + 1);
+        findMinLines(cnt + 1, selectedLines);
     }
 
     public static void main(String[] args) {
@@ -83,10 +82,12 @@ public class Main {
             int b = sc.nextInt();
             lines.add(new Pair(b, a - 1));
         }
+
+        ArrayList<Pair> selectedLines = new ArrayList<>();
         
         Collections.sort(lines);
 
-        findMinLines(0);
+        findMinLines(0, selectedLines);
         
         System.out.print(ans);
     }
