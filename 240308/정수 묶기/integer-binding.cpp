@@ -14,7 +14,7 @@ vector<int> negative;
 int zero_count;
 
 // 수열 최댓값
-int result;
+long long result;
 
 // 수열 최댓값 출력 함수
 int greedy(){
