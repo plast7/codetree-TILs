@@ -17,7 +17,7 @@ int zero_count;
 long long result;
 
 // 수열 최댓값 출력 함수
-int greedy(){
+long long greedy(){
 
     // 양수 저장 벡터 내림차순 정렬
     sort(positive.begin(), positive.end(), greater<int>());
