@@ -1,6 +1,6 @@
 # 변수 선언
 n, m = map(int, input().split())
-points = [0] * (n + 1)
+points = [0] + list(map(int, input().split()))
 
 # dp[i][j][k][l] : 둘 다 시작점에서 출발하여 서로 겹치지 않게 카드를 순서대로 선택하면서
 #                  마지막으로 i번 카드까지 확인했고,
@@ -9,9 +9,6 @@ points = [0] * (n + 1)
 #                  지금까지 l개의 카드를 스킵했을 때
 #                  지금까지 온 거리의 합 중 가능한 최솟값
 dp = [[[[2e9 for _ in range(m + 1)] for _ in range(n + 1)] for _ in range(n + 1)] for _ in range(n + 1)]
-
-for i in range(1, n+1):
-    points[i] = int(input())
 
 # 두 카드의 거리를 계산합니다.
 # 원래는 |points[x] - points[y]|가 되지만,
