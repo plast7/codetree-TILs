@@ -1,40 +1,44 @@
 #include <iostream>
+#include <vector>
 #include <algorithm>
-#include <climits>
-
-#define MAX_N 100000
-
 using namespace std;
 
-// 변수 선언
-int n;
-int a[MAX_N + 1];
-
 int main() {
-    // 입력:
-    cin >> n;
-    for(int i = 1; i <= n; i++)
-        cin >> a[i];
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	int n; cin >> n;
 
-    sort(a + 1, a + n + 1);
+	vector<int> liquid;
+	for (int i = 0; i < n; i++) {
+		int value; cin >> value;
+		liquid.push_back(value);
+	}
 
-    // 0에 가장 가까운 합을 구합니다.
-    int ans = INT_MAX;
+	sort(liquid.begin(), liquid.end());
 
-    // 구간을 잡아봅니다.
-    int j = n;
-    for(int i = 1; i <= n; i++) {
-        if(i < j)
-            ans = min(ans, abs(a[i] + a[j]));
+	pair<int, int> ans;
+	int min_val = 1000000001;
+	for (int i = 0; i < n; i++) {
+		int left = i + 1, right = n - 1;
+		while (left <= right) {
+			int mid = (left + right) / 2;
 
-        // 두 수의 합이 0 이하가 될 때 까지 j 구간을 내리면서 정답을 살펴봅니다.
-        while(i < j - 1 && a[i] + a[j] > 0) {
-            j--;
-            ans = min(ans, abs(a[i] + a[j]));
-        }
-    }
-    
-    // 정답을 출력합니다.
-    cout << ans;
-    return 0;
+			if (abs(liquid[i] + liquid[mid]) < min_val) {
+				ans = make_pair(liquid[i], liquid[mid]);
+				min_val = abs(liquid[i] + liquid[mid]);
+			}
+
+			if (liquid[i] + liquid[mid] > 0) {
+				right = mid - 1;
+			}
+			else if (liquid[i] + liquid[mid] < 0) {
+				left = mid + 1;
+			}
+			else {
+				break;
+			}
+		}
+	}
+
+	//cout << ans.first << ' ' << ans.second;
+	cout << min_val;
 }
