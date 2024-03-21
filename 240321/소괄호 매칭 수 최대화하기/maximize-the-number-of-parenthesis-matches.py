@@ -26,7 +26,7 @@ def compare(b1, b2):
     # open1 * closed2 < open2 * closed1라면 
     # b2가 더 앞에 있어야 하므로
     # 현재 순서는 틀렸습니다.
-    if open1 * closed2 > open2 * closed1:
+    if open1 * closed2 < open2 * closed1:
         return 1
     # 우선 순위가 동일한 경우입니다.
     return 0
