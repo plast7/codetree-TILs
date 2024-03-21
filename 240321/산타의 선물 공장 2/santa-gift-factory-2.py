@@ -129,7 +129,7 @@ def divide(m_src, m_dst):
         cnt = 0
         cur = nodes[heads[m_src]]
         dst_start = nodes[heads[m_src]].id
-        while cnt < target-1 and cur.next :
+        while cnt < target and cur.next :
             cnt += 1
             cur = cur.next
 
