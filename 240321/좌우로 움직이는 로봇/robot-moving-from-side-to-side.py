@@ -29,6 +29,6 @@ for i in range(m):
 ans = 0
 for t in range(1,MAX_D+1):
     if pos_a[t] == pos_b[t] and pos_a[t-1] != pos_b[t-1]:
-        print(t)
+        # print(t)
         ans += 1
 print(ans)
