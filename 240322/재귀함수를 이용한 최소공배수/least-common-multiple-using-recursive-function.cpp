@@ -6,7 +6,7 @@ int arr[11];
 
 int gcd(int a, int b) {
     if(b == 0) return a;  
-    else gcd(b, a%b);  
+    else return gcd(b, a%b);  
 }
 
 // gcd는 a, b의 최대공약수이다.
