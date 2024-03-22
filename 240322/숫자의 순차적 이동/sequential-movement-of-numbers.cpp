@@ -17,7 +17,7 @@ void Move(int target) {
     int dx[DIR_NUM] = {0, -1, -1, -1, 0, 1, 1, 1};
     int dy[DIR_NUM] = {1, 1, 0, -1, -1, -1, 0, 1};
 
-    int max_num = target;
+    int max_num = 0;
     int x = pos[target].first, y = pos[target].second;
     int ch_x, ch_y;
     for(int i=0; i<DIR_NUM; i++) {
