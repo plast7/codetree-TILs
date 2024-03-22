@@ -27,6 +27,7 @@ void Move(int target) {
             ch_x = nx; ch_y = ny;
         }
     }
+    if(max_num == 0) max_num = grid[x][y];
     
     if(max_num != target) {
         grid[ch_x][ch_y] = grid[x][y];
