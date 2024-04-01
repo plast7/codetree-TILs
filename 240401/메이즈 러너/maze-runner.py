@@ -225,7 +225,7 @@ if __name__ == "__main__":
     ## 참가자의 좌표
     persons = deque() ## 참가자 저장하는 큐
 
-    for _ in range(3):
+    for _ in range(m):
         x,y = map(int, sys.stdin.readline().split())
         persons.append((x-1,y-1))
         ## 문제 기준 좌상단 좌표가 1,1 이라해서 나는 0,0이 편해서 -1 해주는 거임
