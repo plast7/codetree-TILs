@@ -1,10 +1,10 @@
 import java.util.Scanner;
-import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
-    static int n, k;
-    static List<Integer> list = new ArrayList<>();
+    public static int n, k;
+    public static List<Integer> list = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
