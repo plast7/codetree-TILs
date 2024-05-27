@@ -53,11 +53,11 @@ public class Main {
             int t = -1, x = -1, n = -1;
             String name = "";
             cmd = sc.nextInt();
-            if (cmd == 100)
+            if (cmd == 100) {
                 t = sc.nextInt(); x = sc.nextInt(); name = sc.next();
-            else if (cmd == 200)
+            } else if (cmd == 200) {
                 t = sc.nextInt(); x = sc.nextInt(); name = sc.next(); n = sc.nextInt();
-            else 
+            } else 
                 t = sc.nextInt();
 
             queries.add(new Query(cmd, t, x, name, n));
