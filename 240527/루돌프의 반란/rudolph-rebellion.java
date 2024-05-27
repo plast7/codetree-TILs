@@ -51,7 +51,7 @@ public class Main {
                 int currentBestDist = (closestX - rudolf[0]) * (closestX - rudolf[0]) + (closestY - rudolf[1]) * (closestY - rudolf[1]);
                 int currentValueDist = (pos[i][0] - rudolf[0]) * (pos[i][0] - rudolf[0]) + (pos[i][1] - rudolf[1]) * (pos[i][1] - rudolf[1]);
 
-                if (currentValueDist < currentBestDist || (currentValueDist == currentBestDist && (pos[i][0] < closestX || (pos[i][0] == closestX && pos[i][1] < closestY)))) {
+                if (currentValueDist < currentBestDist || (currentValueDist == currentBestDist && (pos[i][0] > closestX || (pos[i][0] == closestX && pos[i][1] > closestY)))) {
                     closestX = pos[i][0];
                     closestY = pos[i][1];
                     closestIdx = i;
@@ -208,6 +208,14 @@ public class Main {
                     }
                 }
             }
+
+            // for(int i = 1; i <= n; i++) {
+            //     for(int j = 1; j <= n; j++) {
+            //         System.out.print(board[i][j] + " ");
+            //     }
+            //     System.out.println();
+            // }
+            // System.out.println();
 
             // 라운드가 끝나고 탈락하지 않은 산타들의 점수를 1 증가시킵니다.
             for (int i = 1; i <= p; i++) 
