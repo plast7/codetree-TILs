@@ -203,7 +203,7 @@ public class Main {
                     } else {
                         board[pos[i][0]][pos[i][1]] = 0;
                         pos[i][0] = nx;
-                        pos[i][1]] = ny;
+                        pos[i][1] = ny;
                         board[nx][ny] = i;
                     }
                 }
