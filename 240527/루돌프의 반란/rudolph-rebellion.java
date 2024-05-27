@@ -7,8 +7,8 @@ public class Main {
 
     public static int n, m, p, c, d;
     public static int[] points = new int[MAX_P];
-    public static Pair[] pos = new Pair[MAX_P];
-    public static Pair rudolf;
+    public static int[][] pos = new int[MAX_P][2];
+    public static int[] rudolf = new int[2];
 
     public static int[][] board = new int[MAX_N][MAX_N];
     public static boolean[] is_live = new boolean[MAX_P];
@@ -29,13 +29,15 @@ public class Main {
         p = sc.nextInt();
         c = sc.nextInt();
         d = sc.nextInt();
-        rudolf = new Pair(sc.nextInt(), sc.nextInt());
-        board[rudolf.first][rudolf.second] = -1;  // 루돌프의 위치를 보드에 표시합니다.
+        rudolf[0] = sc.nextInt();
+        rudolf[1] = sc.nextInt();
+        board[rudolf[0]][rudolf[1]] = -1;  // 루돌프의 위치를 보드에 표시합니다.
 
         for (int i = 1; i <= p; i++) {
             int id = sc.nextInt();
-            pos[id] = new Pair(sc.nextInt(), sc.nextInt());
-            board[pos[id].first][pos[id].second] = id; // 각 산타의 위치를 보드에 표시합니다.
+            pos[id][0] = sc.nextInt();
+            pos[id][1] = sc.nextInt();
+            board[pos[id][0]][pos[id][1]] = id; // 각 산타의 위치를 보드에 표시합니다.
             is_live[id] = true;  // 산타가 살아있는지 여부를 표시합니다.
         }
 
@@ -46,39 +48,33 @@ public class Main {
             for (int i = 1; i <= p; i++) {
                 if (!is_live[i]) continue;
 
-                Pair<Integer, Pair<Integer, Integer>> currentBest = new Pair<>(
-                        (closestX - rudolf.first) * (closestX - rudolf.first) + (closestY - rudolf.second) * (closestY - rudolf.second),
-                        new Pair<>(-closestX, -closestY)
-                );
-                Pair<Integer, Pair<Integer, Integer>> currentValue = new Pair<>(
-                        (pos[i].first - rudolf.first) * (pos[i].first - rudolf.first) + (pos[i].second - rudolf.second) * (pos[i].second - rudolf.second),
-                        new Pair<>(-pos[i].first, -pos[i].second)
-                );
+                int currentBestDist = (closestX - rudolf[0]) * (closestX - rudolf[0]) + (closestY - rudolf[1]) * (closestY - rudolf[1]);
+                int currentValueDist = (pos[i][0] - rudolf[0]) * (pos[i][0] - rudolf[0]) + (pos[i][1] - rudolf[1]) * (pos[i][1] - rudolf[1]);
 
-                if (currentValue.compareTo(currentBest) < 0) {
-                    closestX = pos[i].first;
-                    closestY = pos[i].second;
+                if (currentValueDist < currentBestDist || (currentValueDist == currentBestDist && (pos[i][0] < closestX || (pos[i][0] == closestX && pos[i][1] < closestY)))) {
+                    closestX = pos[i][0];
+                    closestY = pos[i][1];
                     closestIdx = i;
                 }
             }
 
             // 가장 가까운 산타의 방향으로 루돌프가 이동합니다.
             if (closestIdx != 0) {
-                Pair<Integer, Integer> prevRudolf = rudolf;
+                int[] prevRudolf = {rudolf[0], rudolf[1]};
                 int moveX = 0;
-                if (closestX > rudolf.first) moveX = 1;
-                else if (closestX < rudolf.first) moveX = -1;
+                if (closestX > rudolf[0]) moveX = 1;
+                else if (closestX < rudolf[0]) moveX = -1;
 
                 int moveY = 0;
-                if (closestY > rudolf.second) moveY = 1;
-                else if (closestY < rudolf.second) moveY = -1;
+                if (closestY > rudolf[1]) moveY = 1;
+                else if (closestY < rudolf[1]) moveY = -1;
 
-                rudolf.first += moveX;
-                rudolf.second += moveY;
-                board[prevRudolf.first][prevRudolf.second] = 0;
+                rudolf[0] += moveX;
+                rudolf[1] += moveY;
+                board[prevRudolf[0]][prevRudolf[1]] = 0;
 
                 // 루돌프의 이동으로 충돌한 경우, 산타를 이동시키고 처리를 합니다.
-                if (rudolf.first == closestX && rudolf.second == closestY) {
+                if (rudolf[0] == closestX && rudolf[1] == closestY) {
                     int firstX = closestX + moveX * c;
                     int firstY = closestY + moveY * c;
                     int lastX = firstX;
@@ -106,7 +102,8 @@ public class Main {
                             is_live[idx] = false;
                         } else {
                             board[lastX][lastY] = board[beforeX][beforeY];
-                            pos[idx] = new Pair<>(lastX, lastY);
+                            pos[idx][0] = lastX;
+                            pos[idx][1] = lastY;
                         }
 
                         lastX = beforeX;
@@ -114,7 +111,8 @@ public class Main {
                     }
 
                     points[closestIdx] += c;
-                    pos[closestIdx] = new Pair<>(firstX, firstY);
+                    pos[closestIdx][0] = firstX;
+                    pos[closestIdx][1] = firstY;
                     if (is_inrange(firstX, firstY)) {
                         board[firstX][firstY] = closestIdx;
                     } else {
@@ -123,22 +121,22 @@ public class Main {
                 }
             }
 
-            board[rudolf.first][rudolf.second] = -1;
+            board[rudolf[0]][rudolf[1]] = -1;
 
             // 각 산타들은 루돌프와 가장 가까운 방향으로 한칸 이동합니다.
             for (int i = 1; i <= p; i++) {
                 if (!is_live[i] || stun[i] >= t) continue;
 
-                int minDist = (pos[i].first - rudolf.first) * (pos[i].first - rudolf.first) + (pos[i].second - rudolf.second) * (pos[i].second - rudolf.second);
+                int minDist = (pos[i][0] - rudolf[0]) * (pos[i][0] - rudolf[0]) + (pos[i][1] - rudolf[1]) * (pos[i][1] - rudolf[1]);
                 int moveDir = -1;
 
                 for (int dir = 0; dir < 4; dir++) {
-                    int nx = pos[i].first + dx[dir];
-                    int ny = pos[i].second + dy[dir];
+                    int nx = pos[i][0] + dx[dir];
+                    int ny = pos[i][1] + dy[dir];
 
                     if (!is_inrange(nx, ny) || board[nx][ny] > 0) continue;
 
-                    int dist = (nx - rudolf.first) * (nx - rudolf.first) + (ny - rudolf.second) * (ny - rudolf.second);
+                    int dist = (nx - rudolf[0]) * (nx - rudolf[0]) + (ny - rudolf[1]) * (ny - rudolf[1]);
                     if (dist < minDist) {
                         minDist = dist;
                         moveDir = dir;
@@ -146,11 +144,11 @@ public class Main {
                 }
 
                 if (moveDir != -1) {
-                    int nx = pos[i].first + dx[moveDir];
-                    int ny = pos[i].second + dy[moveDir];
+                    int nx = pos[i][0] + dx[moveDir];
+                    int ny = pos[i][1] + dy[moveDir];
 
                     // 산타의 이동으로 충돌한 경우, 산타를 이동시키고 처리를 합니다.
-                    if (nx == rudolf.first && ny == rudolf.second) {
+                    if (nx == rudolf[0] && ny == rudolf[1]) {
                         stun[i] = t + 1;
 
                         int moveX = -dx[moveDir];
@@ -184,7 +182,8 @@ public class Main {
                                     is_live[idx] = false;
                                 } else {
                                     board[lastX][lastY] = board[beforeX][beforeY];
-                                    pos[idx] = new Pair<>(lastX, lastY);
+                                    pos[idx][0] = lastX;
+                                    pos[idx][1] = lastY;
                                 }
 
                                 lastX = beforeX;
@@ -192,8 +191,9 @@ public class Main {
                             }
 
                             points[i] += d;
-                            board[pos[i].first][pos[i].second] = 0;
-                            pos[i] = new Pair<>(firstX, firstY);
+                            board[pos[i][0]][pos[i][1]] = 0;
+                            pos[i][0] = firstX;
+                            pos[i][1] = firstY;
                             if (is_inrange(firstX, firstY)) {
                                 board[firstX][firstY] = i;
                             } else {
@@ -201,36 +201,20 @@ public class Main {
                             }
                         }
                     } else {
-                        board[pos[i].first][pos[i].second] = 0;
-                        pos[i] = new Pair<>(nx, ny);
+                        board[pos[i][0]][pos[i][1]] = 0;
+                        pos[i][0] = nx;
+                        pos[i][1]] = ny;
                         board[nx][ny] = i;
                     }
                 }
             }
 
             // 라운드가 끝나고 탈락하지 않은 산타들의 점수를 1 증가시킵니다.
-            for (int i = 1; i <= p; i++)
+            for (int i = 1; i <= p; i++) 
                 if (is_live[i]) points[i]++;
         }
 
-        for (int i = 1; i <= p; i++)
+        for (int i = 1; i <= p; i++) 
             System.out.print(points[i] + " ");
-    }
-}
-
-class Pair<K extends Comparable<K>, V extends Comparable<V>> implements Comparable<Pair<K, V>> {
-    public K first;
-    public V second;
-
-    public Pair(K first, V second) {
-        this.first = first;
-        this.second = second;
-    }
-
-    @Override
-    public int compareTo(Pair<K, V> other) {
-        int cmp = this.first.compareTo(other.first);
-        if (cmp != 0) return cmp;
-        return this.second.compareTo(other.second);
     }
 }
