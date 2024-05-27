@@ -39,8 +39,8 @@ public class Main {
     // Query를 (t, cmd) 순으로 정렬합니다.
     public static boolean cmp(Query q1, Query q2) {
         if (q1.t != q2.t)
-            return q1.t < q2.t;
-        return q1.cmd < q2.cmd;
+            return q1.t - q2.t;
+        return q1.cmd - q2.cmd;
     }
 
     public static void main(String[] args) {
