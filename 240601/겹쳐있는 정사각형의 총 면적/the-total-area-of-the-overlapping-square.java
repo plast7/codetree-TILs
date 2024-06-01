@@ -3,10 +3,8 @@ import java.util.*;
 public class Main {
     public static final int MAX_N = 10;
 
-    public static final int[] dx = {0, 1, 0, -1};
-    public static final int[] dy = {1, 0, -1, 0};
-    public static final int[] dx2 = {0, 0, 0, -1, -1, -1, 1, 1, 1};
-    public static final int[] dy2 = {0, -1, 1, 0, -1, 1, 0, -1, 1};
+    public static final int[] dx = {0, 1, 0, -1}, dy = {1, 0, -1, 0};
+    public static final int[] dx2 = {0, 0, 0, -1, -1, -1, 1, 1, 1}, dy2 = {0, -1, 1, 0, -1, 1, 0, -1, 1};
 
     public static int n, m, k;
     public static int turn;
@@ -17,17 +15,16 @@ public class Main {
 
     // 빛의 공격을 할 때 방문 여부와 경로 방향을 기록해줍니다.
     public static boolean[][] vis = new boolean[MAX_N][MAX_N];
-    public static int[][] back_x = new int[MAX_N][MAX_N];
-    public static int[][] back_y = new int[MAX_N][MAX_N];
+    public static int[][] back_x = new int[MAX_N][MAX_N], back_y = new int[MAX_N][MAX_N];
 
     // 공격과 무관했는지 여부를 저장합니다.
     public static boolean[][] is_active = new boolean[MAX_N][MAX_N];
 
-    // 구조체 Turret을 정의해 관리합니다.
+    // 구조체 turret을 정의해 관리합니다.
     static class Turret {
         int x, y, r, p;
 
-        public Turret(int x, int y, int r, int p) {
+        Turret(int x, int y, int r, int p) {
             this.x = x;
             this.y = y;
             this.r = r;
@@ -47,7 +44,7 @@ public class Main {
     }
 
     // 턴을 진행하기 전 필요한 전처리를 정리해줍니다.
-    public static void init() {
+    public static void Init() {
         turn++;
         for (int i = 0; i < n; i++)
             for (int j = 0; j < m; j++) {
@@ -58,9 +55,9 @@ public class Main {
 
     // 각성을 진행합니다.
     // 각성을 하면 가장 약한 포탑이 n + m만큼 강해집니다.
-    public static void awake() {
+    public static void Awake() {
         // 우선순위에 맞게 현재 살아있는 포탑들을 정렬해줍니다.
-        live_turret.sort((a, b) -> cmp(a, b) ? -1 : 1);
+        live_turret.sort(Main::cmp);
 
         // 가장 약한 포탑을 찾아 n + m만큼 더해주고,
         // is_active와 live_turret 배열도 갱신해줍니다.
@@ -78,7 +75,7 @@ public class Main {
     }
 
     // 레이저 공격을 진행합니다.
-    public static boolean laserAttack() {
+    public static boolean LaserAttack() {
         // 기존에 정렬된 가장 앞선 포탑이
         // 각성한 포탑입니다.
         Turret weak_turret = live_turret.get(0);
@@ -102,8 +99,7 @@ public class Main {
 
         while (!q.isEmpty()) {
             int[] cur = q.poll();
-            int x = cur[0];
-            int y = cur[1];
+            int x = cur[0], y = cur[1];
 
             // 가장 강한 포탑에게 도달할 수 있다면
             // 바로 멈춥니다.
@@ -165,7 +161,7 @@ public class Main {
     }
 
     // 레이저 공격을 하지 못했다면 폭탄 공격을 진행합니다.
-    public static void bombAttack() {
+    public static void BombAttack() {
         // 기존에 정렬된 가장 앞선 포탑이
         // 각성한 포탑입니다.
         Turret weak_turret = live_turret.get(0);
@@ -207,7 +203,7 @@ public class Main {
     }
 
     // 공격에 관여하지 않은 모든 살아있는 포탑의 힘을 1 증가시킵니다.
-    public static void reserve() {
+    public static void Reserve() {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 if (is_active[i][j])
@@ -245,19 +241,19 @@ public class Main {
                 break;
 
             // 턴을 진행하기 전 필요한 전처리를 정리해줍니다.
-            init();
+            Init();
 
             // 각성을 진행합니다.
-            awake();
+            Awake();
 
             // 레이저 공격을 진행합니다.
-            boolean is_suc = laserAttack();
+            boolean is_suc = LaserAttack();
             // 레이저 공격을 하지 못했다면 포탄 공격을 진행합니다.
             if (!is_suc)
-                bombAttack();
+                BombAttack();
 
             // 공격에 관여하지 않은 모든 살아있는 포탑의 힘을 1 증가시킵니다.
-            reserve();
+            Reserve();
         }
 
         // 살아있는 포탑의 힘 중 가장 큰 값을 출력합니다.
