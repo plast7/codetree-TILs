@@ -1,9 +1,7 @@
 import java.util.*;
 
 public class Main {
-
     public static void main(String[] args) {
-
         Scanner sc = new Scanner(System.in);
 
         int N = sc.nextInt();
@@ -17,23 +15,24 @@ public class Main {
         }
         Collections.sort(S);
 
-        TreeSet<Pair> st = new TreeSet<>();
-        List<Pair> res = new ArrayList<>();
-        Iterator<Pair> ita, itb;
+        Set<PairWithIndex> st = new TreeSet<>();
+        List<PairWithIndex> res = new ArrayList<>();
+        Iterator<PairWithIndex> ita, itb;
         for (int i = 0, j = 0; i < S.size() && res.size() < 2; i++) {
             for (; S.get(j).x + K <= S.get(i).x; j++) {
-                st.remove(new Pair(S.get(j).y, j));
+                st.remove(new PairWithIndex(S.get(j).y, j));
             }
 
-            Pair inserted = new Pair(S.get(i).y, i);
+            PairWithIndex inserted = new PairWithIndex(S.get(i).y, i);
+            st.add(inserted);
             ita = st.headSet(inserted, false).iterator();
             itb = st.tailSet(inserted, false).iterator();
-            st.add(inserted);
-            if (ita.hasNext() && S.get(i).y < ita.next().x + K) {
-                res.add(new Pair(i, ita.next().y));
+
+            if (ita.hasNext() && S.get(i).y < ita.next().y + K) {
+                res.add(new PairWithIndex(i, ita.next().index));
             }
-            if (itb.hasNext() && itb.next().x < S.get(i).y + K) {
-                res.add(new Pair(i, itb.next().y));
+            if (itb.hasNext() && itb.next().y < S.get(i).y + K) {
+                res.add(new PairWithIndex(i, itb.next().index));
             }
         }
 
@@ -54,17 +53,33 @@ public class Main {
 class Pair implements Comparable<Pair> {
     int x, y;
 
-    Pair(int x, int y) {
+    public Pair(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
     @Override
-    public int compareTo(Pair o) {
-        if (this.x != o.x) {
-            return Integer.compare(this.x, o.x);
-        } else {
-            return Integer.compare(this.y, o.y);
+    public int compareTo(Pair other) {
+        if (this.x != other.x) {
+            return Integer.compare(this.x, other.x);
         }
+        return Integer.compare(this.y, other.y);
+    }
+}
+
+class PairWithIndex implements Comparable<PairWithIndex> {
+    int y, index;
+
+    public PairWithIndex(int y, int index) {
+        this.y = y;
+        this.index = index;
+    }
+
+    @Override
+    public int compareTo(PairWithIndex other) {
+        if (this.y != other.y) {
+            return Integer.compare(this.y, other.y);
+        }
+        return Integer.compare(this.index, other.index);
     }
 }
