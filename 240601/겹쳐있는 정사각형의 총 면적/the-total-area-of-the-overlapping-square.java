@@ -24,16 +24,15 @@ public class Main {
                 j++;
             }
 
-            Pair inserted = new Pair(S.get(i).y, i);
-            st.add(inserted);
-            ita = st.headSet(inserted, false).descendingIterator();
-            itb = st.tailSet(inserted, false).iterator();
+            st.add(new Pair(S.get(i).y, i));
+            ita = st.lower(new Pair(S.get(i).y, i));
+            itb = st.higher(new Pair(S.get(i).y, i));
 
-            if (ita.hasNext() && S.get(i).y < ita.next().x + K) {
-                res.add(new Pair(i, ita.next().y));
+            if (ita != null && S.get(i).y < ita.get().x + K) {
+                res.add(new Pair(i, ita.get().y));
             }
-            if (itb.hasNext() && itb.next().x < S.get(i).y + K) {
-                res.add(new Pair(i, itb.next().y));
+            if (itb != null && itb.get().x < S.get(i).y + K) {
+                res.add(new Pair(i, itb.get().y));
             }
         }
 
@@ -59,11 +58,24 @@ public class Main {
         }
 
         @Override
-        public int compareTo(Pair other) {
-            if (this.x == other.x) {
-                return Integer.compare(this.y, other.y);
+        public int compareTo(Pair p) {
+            if (this.x == p.x) {
+                return Integer.compare(this.y, p.y);
             }
-            return Integer.compare(this.x, other.x);
+            return Integer.compare(this.x, p.x);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Pair pair = (Pair) o;
+            return x == pair.x && y == pair.y;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y);
         }
     }
 }
