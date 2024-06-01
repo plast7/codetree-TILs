@@ -1,9 +1,8 @@
 import java.util.*;
 
-class Point {
+class Pt {
     int x, y;
-
-    Point(int a, int b) {
+    Pt(int a, int b) {
         x = a;
         y = b;
     }
@@ -12,15 +11,9 @@ class Point {
 public class Main {
     static int N;
     static int[] x = new int[100], y = new int[100], indx = new int[100];
-    static Set<Pair> points = new HashSet<>(); // keeps track of which (x, y) coordinates are farms
-    static List<Point> nodes = new ArrayList<>();
-    static List<List<Integer>> adj = new ArrayList<>(500); // adjacency list
-
-    static {
-        for (int i = 0; i < 500; i++) {
-            adj.add(new ArrayList<>());
-        }
-    }
+    static Set<Pair<Integer, Integer>> points = new HashSet<>(); // keeps track of which (x, y) coordinates are farms
+    static List<Pt> nodes = new ArrayList<>();
+    static List<Integer>[] adj = new ArrayList[500]; // adjacency list
 
     // Returns the taxicab distance between nodes[a] and nodes[b].
     static int length(int a, int b) {
@@ -29,37 +22,37 @@ public class Main {
 
     // Returns whether the first point (x1, y1) is on the segment (x2, y2) -> (x3, y3).
     static boolean inSegment(int x1, int y1, int x2, int y2, int x3, int y3) {
-        if (x2 == x3)
+        if (x2 == x3) {
             return x1 == x2 && y1 > Math.min(y2, y3) && y1 < Math.max(y2, y3);
-        else if (y2 == y3)
+        } else if (y2 == y3) {
             return y1 == y2 && x1 > Math.min(x2, x3) && x1 < Math.max(x2, x3);
-        else // invalid
+        } else {
+            // invalid
             return true;
+        }
     }
 
     // Returns whether a right-angle path from nodes[a] to nodes[b] is possible (does not intersect any of the N original points, except potentially at endpoints).
     static boolean possible(int a, int b) {
         // Method 1: travel vertical first, then horizontal
-        boolean good1 = nodes.get(a).x == nodes.get(b).x || nodes.get(a).y == nodes.get(b).y || !points.contains(new Pair(nodes.get(a).x, nodes.get(b).y));
+        boolean good1 = nodes.get(a).x == nodes.get(b).x || nodes.get(a).y == nodes.get(b).y || points.contains(new Pair<>(nodes.get(a).x, nodes.get(b).y));
         for (int i = 0; i < N; i++) {
             if (inSegment(x[i], y[i], nodes.get(a).x, nodes.get(a).y, nodes.get(a).x, nodes.get(b).y) || inSegment(x[i], y[i], nodes.get(a).x, nodes.get(b).y, nodes.get(b).x, nodes.get(b).y)) {
                 good1 = false;
                 break;
             }
         }
-        if (good1)
-            return true;
+        if (good1) return true;
 
         // Method 2: travel horizontal first, then vertical
-        boolean good2 = nodes.get(a).x == nodes.get(b).x || nodes.get(a).y == nodes.get(b).y || !points.contains(new Pair(nodes.get(b).x, nodes.get(a).y));
+        boolean good2 = nodes.get(a).x == nodes.get(b).x || nodes.get(a).y == nodes.get(b).y || points.contains(new Pair<>(nodes.get(b).x, nodes.get(a).y));
         for (int i = 0; i < N; i++) {
             if (inSegment(x[i], y[i], nodes.get(a).x, nodes.get(a).y, nodes.get(b).x, nodes.get(a).y) || inSegment(x[i], y[i], nodes.get(b).x, nodes.get(a).y, nodes.get(b).x, nodes.get(b).y)) {
                 good2 = false;
                 break;
             }
         }
-        if (good2)
-            return true;
+        if (good2) return true;
 
         return false;
     }
@@ -67,7 +60,7 @@ public class Main {
     // Returns the length of the shortest path from nodes[a] to nodes[b].
     static boolean[] vis = new boolean[500];
     static int[] dist = new int[500];
-    static final int infinity = Integer.MAX_VALUE;
+    static int infinity = 1023456789;
 
     static int dijkstra(int a, int b) {
         Arrays.fill(dist, infinity);
@@ -81,24 +74,19 @@ public class Main {
         }
 
         dist[a] = 0;
-
         for (int i = 0; i < nodes.size(); i++) {
-            int next = -1; // Fix: initialize to a default invalid value
+            int next = 0;
             for (int j = 0; j < nodes.size(); j++) {
-                if (!vis[j] && (next == -1 || dist[j] < dist[next])) {
+                if (!vis[j] && (dist[j] < dist[next] || vis[next])) {
                     next = j;
                 }
             }
-            if (next == -1 || dist[next] == infinity) {
-                return -1;
-            }
-            if (next == b) {
-                return dist[next];
-            }
+            if (vis[next] || dist[next] == infinity) return -1;
+            if (next == b) return dist[next];
             vis[next] = true;
-            for (int j : adj.get(next)) {
-                if (!vis[j]) {
-                    dist[j] = Math.min(dist[j], dist[next] + length(next, j));
+            for (int j = 0; j < adj[next].size(); j++) {
+                if (!vis[adj[next].get(j)]) {
+                    dist[adj[next].get(j)] = Math.min(dist[adj[next].get(j)], dist[next] + length(next, adj[next].get(j)));
                 }
             }
         }
@@ -107,11 +95,12 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+
         N = sc.nextInt();
         for (int i = 0; i < N; i++) {
             x[i] = sc.nextInt();
             y[i] = sc.nextInt();
-            points.add(new Pair(x[i], y[i]));
+            points.add(new Pair<>(x[i], y[i]));
         }
 
         // Make nodes
@@ -119,21 +108,25 @@ public class Main {
             for (int a = -1; a <= 1; a++) {
                 for (int b = -1; b <= 1; b++) {
                     if (a == 0 && b == 0) {
-                        nodes.add(new Point(x[i], y[i]));
+                        nodes.add(new Pt(x[i], y[i]));
                         indx[i] = nodes.size() - 1;
-                    } else if (a * b == 0 && !points.contains(new Pair(x[i] + a, y[i] + b))) {
-                        nodes.add(new Point(x[i] + a, y[i] + b));
+                    } else if (a * b == 0 && !points.contains(new Pair<>(x[i] + a, y[i] + b))) {
+                        nodes.add(new Pt(x[i] + a, y[i] + b));
                     }
                 }
             }
+        }
+
+        for (int i = 0; i < 500; i++) {
+            adj[i] = new ArrayList<>();
         }
 
         // Make edges
         for (int i = 0; i < nodes.size(); i++) {
             for (int j = i + 1; j < nodes.size(); j++) {
                 if (possible(i, j)) {
-                    adj.get(i).add(j);
-                    adj.get(j).add(i);
+                    adj[i].add(j);
+                    adj[j].add(i);
                 }
             }
         }
@@ -151,27 +144,5 @@ public class Main {
         }
 
         System.out.println(answer);
-    }
-
-    static class Pair {
-        int x, y;
-
-        Pair(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(x, y);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (obj == null || getClass() != obj.getClass()) return false;
-            Pair pair = (Pair) obj;
-            return x == pair.x && y == pair.y;
-        }
     }
 }
