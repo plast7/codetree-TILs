@@ -17,23 +17,23 @@ public class Main {
 
         TreeSet<Pair> st = new TreeSet<>();
         List<Pair> res = new ArrayList<>();
-        
+        Iterator<Pair> ita, itb;
         for (int i = 0, j = 0; i < S.size() && res.size() < 2; i++) {
             while (S.get(j).x + K <= S.get(i).x) {
                 st.remove(new Pair(S.get(j).y, j));
                 j++;
             }
 
-            Pair ita = st.floor(new Pair(S.get(i).y, i));
-            Pair itb = st.ceiling(new Pair(S.get(i).y, i));
+            Pair inserted = new Pair(S.get(i).y, i);
+            st.add(inserted);
+            ita = st.headSet(inserted, false).descendingIterator();
+            itb = st.tailSet(inserted, false).iterator();
 
-            st.add(new Pair(S.get(i).y, i));
-
-            if (ita != null && ita.y != i && S.get(i).y < ita.x + K) {
-                res.add(new Pair(i, ita.y));
+            if (ita.hasNext() && S.get(i).y < ita.next().x + K) {
+                res.add(new Pair(i, ita.next().y));
             }
-            if (itb != null && itb.y != i && itb.x < S.get(i).y + K) {
-                res.add(new Pair(i, itb.y));
+            if (itb.hasNext() && itb.next().x < S.get(i).y + K) {
+                res.add(new Pair(i, itb.next().y));
             }
         }
 
@@ -61,9 +61,9 @@ public class Main {
         @Override
         public int compareTo(Pair other) {
             if (this.x != other.x) {
-                return this.x - other.x;
+                return Integer.compare(this.x, other.x);
             } else {
-                return this.y - other.y;
+                return Integer.compare(this.y, other.y);
             }
         }
     }
