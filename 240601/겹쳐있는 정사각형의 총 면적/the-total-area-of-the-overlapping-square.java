@@ -7,34 +7,33 @@ public class Main {
         int N = sc.nextInt();
         int K = sc.nextInt();
 
-        List<Pair<Integer, Integer>> S = new ArrayList<>();
+        List<Pair> S = new ArrayList<>();
         for (int i = 0; i < N; i++) {
             int x = sc.nextInt();
             int y = sc.nextInt();
-            S.add(new Pair<>(x, y));
+            S.add(new Pair(x, y));
         }
-        S.sort(Comparator.comparing(Pair::getKey));
+        Collections.sort(S);
 
-        TreeSet<Pair<Integer, Integer>> st = new TreeSet<>(Comparator.comparing(Pair::getKey).thenComparing(Pair::getValue));
-        List<Pair<Integer, Integer>> res = new ArrayList<>();
-        Iterator<Pair<Integer, Integer>> ita, itb;
-
+        TreeSet<Pair> st = new TreeSet<>();
+        List<Pair> res = new ArrayList<>();
+        
         for (int i = 0, j = 0; i < S.size() && res.size() < 2; i++) {
-            for (; S.get(j).getKey() + K <= S.get(i).getKey(); j++) {
-                st.remove(new Pair<>(S.get(j).getValue(), j));
+            while (S.get(j).x + K <= S.get(i).x) {
+                st.remove(new Pair(S.get(j).y, j));
+                j++;
             }
 
-            Pair<Integer, Integer> insertedPair = new Pair<>(S.get(i).getValue(), i);
-            ita = st.headSet(insertedPair, true).descendingIterator();
-            itb = st.tailSet(insertedPair, false).iterator();
+            Pair ita = st.floor(new Pair(S.get(i).y, i));
+            Pair itb = st.ceiling(new Pair(S.get(i).y, i));
 
-            st.add(insertedPair);
+            st.add(new Pair(S.get(i).y, i));
 
-            if (ita.hasNext() && S.get(i).getValue() < ita.next().getKey() + K) {
-                res.add(new Pair<>(i, ita.next().getValue()));
+            if (ita != null && ita.y != i && S.get(i).y < ita.x + K) {
+                res.add(new Pair(i, ita.y));
             }
-            if (itb.hasNext() && itb.next().getKey() < S.get(i).getValue() + K) {
-                res.add(new Pair<>(i, itb.next().getValue()));
+            if (itb != null && itb.y != i && itb.x < S.get(i).y + K) {
+                res.add(new Pair(i, itb.y));
             }
         }
 
@@ -42,32 +41,30 @@ public class Main {
         if (res.size() > 1) {
             result = -1;
         } else if (res.size() == 1) {
-            int dx = S.get(res.get(0).getKey()).getKey() - S.get(res.get(0).getValue()).getKey();
-            int dy = S.get(res.get(0).getKey()).getValue() - S.get(res.get(0).getValue()).getValue();
+            int dx = S.get(res.get(0).x).x - S.get(res.get(0).y).x;
+            int dy = S.get(res.get(0).x).y - S.get(res.get(0).y).y;
             if (dx < 0) dx = -dx;
             if (dy < 0) dy = -dy;
             result = 1L * (K - dx) * (K - dy);
         }
-        
         System.out.println(result);
-        sc.close();
-    }
-}
-
-class Pair<K, V> {
-    private K key;
-    private V value;
-
-    public Pair(K key, V value) {
-        this.key = key;
-        this.value = value;
     }
 
-    public K getKey() {
-        return key;
-    }
+    static class Pair implements Comparable<Pair> {
+        int x, y;
 
-    public V getValue() {
-        return value;
+        Pair(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        @Override
+        public int compareTo(Pair other) {
+            if (this.x != other.x) {
+                return this.x - other.x;
+            } else {
+                return this.y - other.y;
+            }
+        }
     }
 }
