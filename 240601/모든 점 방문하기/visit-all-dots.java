@@ -2,34 +2,32 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
-    public static final int MAXN = 1005;
 
-    public static int N;
-    public static int[] cows = new int[MAXN];
-    public static int[][] best = new int[MAXN][2], best2 = new int[MAXN][2];
+    private static final int MAXN = 1005;
 
-    public static void mini(int[] arr, int index, int value) {
-        if (value < arr[index]) {
-            arr[index] = value;
+    private static int N;
+    private static int[] cows = new int[MAXN];
+    private static int[][] best = new int[MAXN][2], best2 = new int[MAXN][2];
+
+    private static void mini(int[] a, int index, int b) {
+        if (b < a[index]) {
+            a[index] = b;
         }
     }
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        // Initialize best array with a large value
-        for (int i = 0; i < MAXN; i++) {
-            Arrays.fill(best[i], Integer.MAX_VALUE);
+        for (int[] row : best) {
+            Arrays.fill(row, Integer.MAX_VALUE);
         }
 
-        N = sc.nextInt();
-
+        N = sc.nextInt(); // 입력받기
         for (int i = 1; i <= N; i++) {
             cows[i] = sc.nextInt();
         }
 
-        cows[++N] = 0;
-
+        cows[++N] = 0; // 종료 값 추가
         Arrays.sort(cows, 1, N + 1);
 
         for (int i = 1; i <= N; i++) {
@@ -41,9 +39,8 @@ public class Main {
         for (int len = 1; len < N; len++) {
             int ccount = N - len;
 
-            // Initialize best2 array with a large value
-            for (int i = 0; i < MAXN; i++) {
-                Arrays.fill(best2[i], Integer.MAX_VALUE);
+            for (int[] row : best2) {
+                Arrays.fill(row, Integer.MAX_VALUE);
             }
 
             for (int i = 1; i + len <= N + 1; i++) {
@@ -54,8 +51,8 @@ public class Main {
                 mini(best2[i], 1, best[i][1] + ccount * (cows[i + len] - cows[i + len - 1]));
             }
 
-            for (int i = 0; i < MAXN; i++) {
-                System.arraycopy(best2[i], 0, best[i], 0, 2);
+            for (int j = 0; j < best.length; j++) {
+                System.arraycopy(best2[j], 0, best[j], 0, best[j].length);
             }
         }
 
