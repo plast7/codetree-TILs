@@ -1,18 +1,16 @@
 import java.util.Scanner;
 
 public class Main {
-
     public static final int MOD = 2012;
     public static final int MAXN = 1010;
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        String input = sc.nextLine();
-        
         int[] A = new int[MAXN];
+
         int L = A[1] = 1;
-        
-        for (char ch : input.toCharArray()) {
+        while (sc.hasNext()) {
+            char ch = sc.next().charAt(0);
             if (L <= 0 || (ch != '(' && ch != ')')) break;
             int dir = ch == '(' ? 1 : -1;
             L += dir;
@@ -22,7 +20,7 @@ public class Main {
             }
             A[L + 1] = 0;
         }
-        
+
         System.out.println(L == 1 ? A[1] : 0);
     }
 }
