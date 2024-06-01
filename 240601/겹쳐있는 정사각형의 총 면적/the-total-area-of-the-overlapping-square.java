@@ -60,11 +60,10 @@ public class Main {
 
         @Override
         public int compareTo(Pair other) {
-            if (this.x != other.x) {
-                return Integer.compare(this.x, other.x);
-            } else {
+            if (this.x == other.x) {
                 return Integer.compare(this.y, other.y);
             }
+            return Integer.compare(this.x, other.x);
         }
     }
 }
