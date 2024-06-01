@@ -2,20 +2,25 @@ import java.util.*;
 
 class Point {
     int x, y;
+
     Point(int a, int b) {
-        this.x = a;
-        this.y = b;
+        x = a;
+        y = b;
     }
 }
 
 public class Main {
     static int N;
-    static int[] x = new int[100];
-    static int[] y = new int[100];
-    static int[] indx = new int[100];
+    static int[] x = new int[100], y = new int[100], indx = new int[100];
     static Set<Pair> points = new HashSet<>(); // keeps track of which (x, y) coordinates are farms
     static List<Point> nodes = new ArrayList<>();
-    static List<Integer>[] adj = new ArrayList[500]; // adjacency list
+    static List<List<Integer>> adj = new ArrayList<>(500); // adjacency list
+
+    static {
+        for (int i = 0; i < 500; i++) {
+            adj.add(new ArrayList<>());
+        }
+    }
 
     // Returns the taxicab distance between nodes[a] and nodes[b].
     static int length(int a, int b) {
@@ -36,21 +41,23 @@ public class Main {
     static boolean possible(int a, int b) {
         // Method 1: travel vertical first, then horizontal
         boolean good1 = nodes.get(a).x == nodes.get(b).x || nodes.get(a).y == nodes.get(b).y || !points.contains(new Pair(nodes.get(a).x, nodes.get(b).y));
-        for (int i = 0; i < N; i++)
+        for (int i = 0; i < N; i++) {
             if (inSegment(x[i], y[i], nodes.get(a).x, nodes.get(a).y, nodes.get(a).x, nodes.get(b).y) || inSegment(x[i], y[i], nodes.get(a).x, nodes.get(b).y, nodes.get(b).x, nodes.get(b).y)) {
                 good1 = false;
                 break;
             }
+        }
         if (good1)
             return true;
 
         // Method 2: travel horizontal first, then vertical
         boolean good2 = nodes.get(a).x == nodes.get(b).x || nodes.get(a).y == nodes.get(b).y || !points.contains(new Pair(nodes.get(b).x, nodes.get(a).y));
-        for (int i = 0; i < N; i++)
+        for (int i = 0; i < N; i++) {
             if (inSegment(x[i], y[i], nodes.get(a).x, nodes.get(a).y, nodes.get(b).x, nodes.get(a).y) || inSegment(x[i], y[i], nodes.get(b).x, nodes.get(a).y, nodes.get(b).x, nodes.get(b).y)) {
                 good2 = false;
                 break;
             }
+        }
         if (good2)
             return true;
 
@@ -60,31 +67,40 @@ public class Main {
     // Returns the length of the shortest path from nodes[a] to nodes[b].
     static boolean[] vis = new boolean[500];
     static int[] dist = new int[500];
-    static int infinity = 1023456789;
+    static final int infinity = Integer.MAX_VALUE;
 
     static int dijkstra(int a, int b) {
         Arrays.fill(dist, infinity);
         Arrays.fill(vis, false);
 
         // Don't visit farms (except for the start and end locations).
-        for (int i = 0; i < N; i++)
-            if (indx[i] != a && indx[i] != b)
+        for (int i = 0; i < N; i++) {
+            if (indx[i] != a && indx[i] != b) {
                 vis[indx[i]] = true;
+            }
+        }
 
         dist[a] = 0;
+
         for (int i = 0; i < nodes.size(); i++) {
-            int next = 0;
-            for (int j = 0; j < nodes.size(); j++)
-                if (!vis[j] && (dist[j] < dist[next] || vis[next]))
+            int next = -1; // Fix: initialize to a default invalid value
+            for (int j = 0; j < nodes.size(); j++) {
+                if (!vis[j] && (next == -1 || dist[j] < dist[next])) {
                     next = j;
-            if (vis[next] || dist[next] == infinity)
+                }
+            }
+            if (next == -1 || dist[next] == infinity) {
                 return -1;
-            if (next == b)
+            }
+            if (next == b) {
                 return dist[next];
+            }
             vis[next] = true;
-            for (int j : adj[next])
-                if (!vis[j])
+            for (int j : adj.get(next)) {
+                if (!vis[j]) {
                     dist[j] = Math.min(dist[j], dist[next] + length(next, j));
+                }
+            }
         }
         return -1;
     }
@@ -97,10 +113,6 @@ public class Main {
             y[i] = sc.nextInt();
             points.add(new Pair(x[i], y[i]));
         }
-
-        // Initialize adjacency list
-        for (int i = 0; i < 500; i++)
-            adj[i] = new ArrayList<>();
 
         // Make nodes
         for (int i = 0; i < N; i++) {
@@ -117,12 +129,14 @@ public class Main {
         }
 
         // Make edges
-        for (int i = 0; i < nodes.size(); i++)
-            for (int j = i + 1; j < nodes.size(); j++)
+        for (int i = 0; i < nodes.size(); i++) {
+            for (int j = i + 1; j < nodes.size(); j++) {
                 if (possible(i, j)) {
-                    adj[i].add(j);
-                    adj[j].add(i);
+                    adj.get(i).add(j);
+                    adj.get(j).add(i);
                 }
+            }
+        }
 
         // Dijkstra's Algorithm
         int answer = 0;
@@ -138,27 +152,26 @@ public class Main {
 
         System.out.println(answer);
     }
-}
 
-// Additional class to handle pairs of integers
-class Pair {
-    int x, y;
+    static class Pair {
+        int x, y;
 
-    Pair(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
+        Pair(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y);
-    }
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y);
+        }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        Pair pair = (Pair) obj;
-        return this.x == pair.x && this.y == pair.y;
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            Pair pair = (Pair) obj;
+            return x == pair.x && y == pair.y;
+        }
     }
 }
