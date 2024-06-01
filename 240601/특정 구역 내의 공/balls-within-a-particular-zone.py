@@ -19,7 +19,7 @@ def compress(a, z):
     return nz * 2
 
 xz = yz = 0
-arr = [['.' for _ in range(6010)] for _ in range(6010)]
+arr = [['.' for _ in range(4010)] for _ in range(4010)]
 
 gz = 0
 mx = [-1, 0, 1, 0]
