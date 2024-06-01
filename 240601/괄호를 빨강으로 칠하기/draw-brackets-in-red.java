@@ -6,12 +6,15 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+
         int[] A = new int[MAXN];
 
         int L = A[1] = 1;
-        while (sc.hasNext()) {
+        while (L > 0 && sc.hasNext()) {
             char ch = sc.next().charAt(0);
-            if (L <= 0 || (ch != '(' && ch != ')')) break;
+            if (ch != '(' && ch != ')') {
+                break;
+            }
             int dir = ch == '(' ? 1 : -1;
             L += dir;
             for (int j = dir < 0 ? 1 : L; 1 <= j && j <= L; j -= dir) {
