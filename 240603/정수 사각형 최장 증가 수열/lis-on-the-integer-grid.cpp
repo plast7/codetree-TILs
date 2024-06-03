@@ -31,8 +31,8 @@ int FindMax(int x, int y) {
 
     // 정수값이 작은 칸부터 순서대로 보며
     // 4방향에 대해 최적의 칸 수를 계산합니다.
-    int dx[DIR_NUM] = {-1, 1,  0, 0};
-    int dy[DIR_NUM] = { 0, 0, -1, 1};
+    int dx[DIR_NUM] = {1, 0, -1, 0};
+    int dy[DIR_NUM] = {0, -1, 0, 1};
 
     for(int j = 0; j < DIR_NUM; j++) {
         int nx = x + dx[j], ny = y + dy[j];
