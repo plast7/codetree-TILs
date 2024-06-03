@@ -30,7 +30,7 @@ fun findMax(x: Int, y: Int, dp: List<MutableList<Int>>, grid: List<List<Int>>, n
     var ans = 1
 
     val moveX = listOf(1, 0, -1, 0)
-    val moveY = listOf(0, -1, 0, 1)
+    val moveY = listOf(0, 1, 0, -1)
 
     for(k in moveX.indices) {
         val nextX = x + moveX[k]
