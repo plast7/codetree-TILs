@@ -22,7 +22,7 @@ fun isAvailable(x: Int, y: Int, n: Int): Boolean {
     return !(x < 0 || y < 0 || x >= n || y >= n)
 }
 
-fun findMax(x: Int, y: Int, dp: List<MutableList<Int>>, grid: List<List<Int>>, n: Int): Int {
+tailrec fun findMax(x: Int, y: Int, dp: List<MutableList<Int>>, grid: List<List<Int>>, n: Int): Int {
     if(dp[y][x] != -1) {
         return dp[y][x]
     }
@@ -32,11 +32,11 @@ fun findMax(x: Int, y: Int, dp: List<MutableList<Int>>, grid: List<List<Int>>, n
     val moveX = listOf(1, 0, -1, 0)
     val moveY = listOf(0, -1, 0, 1)
 
-    for(k in moveX.indices) {
+    for(k in 0 until moveX.size) {
         val nextX = x + moveX[k]
         val nextY = y + moveY[k]
 
-        if (isAvailable(nextX, nextY, n) && grid[nextY][nextX] < grid[y][x]) {
+        if (isAvailable(nextX, nextY, n) && grid[nextY][nextX] > grid[y][x]) {
             ans = max(ans, findMax(nextX, nextY, dp, grid, n) + 1)
         }
     }
