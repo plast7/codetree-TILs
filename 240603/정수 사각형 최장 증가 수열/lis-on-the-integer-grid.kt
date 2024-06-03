@@ -36,7 +36,7 @@ fun findMax(x: Int, y: Int, dp: List<MutableList<Int>>, grid: List<List<Int>>, n
         val nextX = x + moveX[k]
         val nextY = y + moveY[k]
 
-        if (isAvailable(nextX, nextY, n) && -grid[nextY][nextX] < -grid[y][x]) {
+        if (isAvailable(nextX, nextY, n) && grid[nextY][nextX] < grid[y][x]) {
             ans = max(ans, findMax(nextX, nextY, dp, grid, n) + 1)
         }
     }
