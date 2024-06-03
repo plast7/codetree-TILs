@@ -9,8 +9,8 @@ fun main() {
     val dp = List(n) { MutableList(n) { -1 } }
 
     var result = 0
-    for(i in 0 until n) {
-        for(j in 0 until n) {
+    for(i in n-1 downTo 0) {
+        for(j in n-1 downTo 0) {
             result = max(result, findMax(i, j, dp, grid, n))
         }
     }
@@ -36,7 +36,7 @@ tailrec fun findMax(x: Int, y: Int, dp: List<MutableList<Int>>, grid: List<List<
         val nextX = x + moveX[k]
         val nextY = y + moveY[k]
 
-        if (isAvailable(nextX, nextY, n) && grid[nextY][nextX] > grid[y][x]) {
+        if (isAvailable(nextX, nextY, n) && grid[nextY][nextX] < grid[y][x]) {
             ans = max(ans, findMax(nextX, nextY, dp, grid, n) + 1)
         }
     }
