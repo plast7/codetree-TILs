@@ -36,7 +36,7 @@ int FindMax(int x, int y) {
 
     for(int j = 0; j < DIR_NUM; j++) {
         int nx = x + dx[j], ny = y + dy[j];
-        if(InRange(nx, ny) && grid[nx][ny] < grid[x][y])
+        if(InRange(nx, ny) && grid[nx][ny] > grid[x][y])
             best = max(best, FindMax(nx, ny) + 1);
     }
 
