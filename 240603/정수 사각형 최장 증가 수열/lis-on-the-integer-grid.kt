@@ -9,7 +9,7 @@ fun main() {
     val dp = List(n) { MutableList(n) { -1 } }
 
     var result = 0
-    for(i in n-1 downTo 0) {
+    for(i in 0 until n) {
         for(j in 0 until n) {
             result = max(result, findMax(i, j, dp, grid, n))
         }
