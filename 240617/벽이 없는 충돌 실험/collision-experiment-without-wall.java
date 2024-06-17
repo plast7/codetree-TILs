@@ -24,7 +24,7 @@ public class Main{
 	
 	static int N, T, lastCrashTime;
 	static int OFFSET = 2000;
-	static int MAX_LEN = 4000;
+	static int MAX_LEN = 2000;
 	static HashMap<Integer, Marble> marbleHmap = new HashMap<>();
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;
