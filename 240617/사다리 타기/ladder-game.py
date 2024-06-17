@@ -21,17 +21,17 @@ def possible():
 def backTraking(cnt, idx):
     
     # 기저조건
-    if idx == m:
+    if cnt == k:
         if possible():
             global min_res
-            min_res = min(min_res, cnt)
+            min_res = min(min_res, k)
         return
     
     # 백트래킹
-    selected_lines.append(lines[idx])
-    backTraking(cnt + 1, idx + 1)
-    selected_lines.pop()
-    backTraking(cnt, idx + 1)
+    for i in range(idx, m):
+        selected_lines.append(lines[i])
+        backTraking(cnt + 1, i + 1)
+        selected_lines.pop()
 
 # 입력
 import sys
@@ -48,9 +48,9 @@ lines.sort()
 
 # 계산2: 백트래킹
 min_res = m
-
-selected_lines = []
-backTraking(0, 0)
+for k in range(m+1):
+    selected_lines = []
+    backTraking(0, 0)
 
 # 출력
 print(min_res)
