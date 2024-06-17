@@ -1,115 +1,95 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-
 using namespace std;
 
-#define MAX_N 100005
+#define MAX_N 100000
+#define MAX_L 25000
+#define MAX_C 25000
 
-// BIT 배열을 선언합니다.
-int bit[MAX_N];
-int bitlen;
+struct Runner {
+    long long speed;
+    long long position;
+    int rank;
+};
 
-// BIT를 초기화합니다.
-inline void bit_init(int n) {
-    for(int i = 1; i <= n; i++) {
-        bit[i] = 0;
-    }
-    bitlen = n;
+int n, l, c;
+vector<Runner> runners;
+int bit[MAX_N + 1];
+int bitLen;
+
+void bitInit(int n) {
+    fill(bit, bit + n + 1, 0);
+    bitLen = n;
 }
 
-// BIT에서 i번째까지의 prefix sum을 구합니다.
-inline int bit_prefix_sum(int i) {
+int bitPrefixSum(int i) {
     int sum = 0;
-    for(int j = i; j > 0; j -= (j & (-j))) {
+    for (int j = i; j > 0; j -= (j & -j)) {
         sum += bit[j];
     }
     return sum;
 }
 
-// BIT에서 i번째 값을 증가시킵니다.
-inline void bit_inc(int i) {
-    for(int j = i; j <= bitlen; j += (j & (-j))) {
+void bitInc(int i) {
+    for (int j = i; j <= bitLen; j += (j & -j)) {
         bit[j]++;
     }
 }
 
-// 사람의 속도 및 모듈러 값을 저장하는 구조체 입니다.
-struct Person {
-    long long speed;
-    long long modulus;
-    int rank;
-};
-
-Person people[MAX_N];
-long long max_speed = 0;
-long long n, l, c;
-
-// 모듈러 값을 기준으로 정렬하기 위한 비교 함수입니다.
-inline bool sort_person_by_modulus(const Person& a, const Person& b) {
-    return a.modulus < b.modulus;
+bool compareModulus(const Runner& a, const Runner& b) {
+    return a.position < b.position;
 }
 
-// 속도를 기준으로 정렬하기 위한 비교 함수입니다.
-inline bool sort_person_by_speed(const Person& a, const Person& b) {
+bool compareSpeed(const Runner& a, const Runner& b) {
     return a.speed < b.speed;
 }
 
 int main() {
-    // 입력을 받습니다.
     cin >> n >> l >> c;
-    for(int i = 0; i < n; i++) {
-        cin >> people[i].speed;
-        if(people[i].speed > max_speed) {
-            max_speed = people[i].speed;
-        }
+    runners.resize(n);
+
+    for (int i = 0; i < n; ++i) {
+        cin >> runners[i].speed;
     }
 
-    // 각 사람의 모듈러 값을 계산합니다.
-    for(int i = 0; i < n; i++) {
-        people[i].modulus = (l * c * people[i].speed) % (c * max_speed);
+    long long maxSpeed = 0;
+    for (int i = 0; i < n; ++i) {
+        maxSpeed = max(maxSpeed, runners[i].speed);
     }
 
-    // 모듈러 값을 기준으로 정렬합니다.
-    sort(people, people + n, sort_person_by_modulus);
+    for (int i = 0; i < n; ++i) {
+        runners[i].position = (l * c * runners[i].speed) % (c * maxSpeed);
+    }
 
-    // 모듈러 값에 따라 랭크를 부여합니다.
-    int a = 0;
+    sort(runners.begin(), runners.end(), compareModulus);
+    
     int rank = 1;
-    while(a < n) {
-        int b = a + 1;
-        while(b < n && people[a].modulus == people[b].modulus) {
-            b++;
+    for (int i = 0; i < n; ) {
+        int j = i;
+        while (j < n && runners[i].position == runners[j].position) {
+            runners[j].rank = rank;
+            ++j;
         }
-        for(int i = a; i < b; i++) {
-            people[i].rank = rank;
-        }
-        a = b;
-        rank++;
+        ++rank;
+        i = j;
     }
 
-    // 속도를 기준으로 정렬합니다.
-    sort(people, people + n, sort_person_by_speed);
+    sort(runners.begin(), runners.end(), compareSpeed);
+    
+    bitInit(n);
+    long long totalMeetings = 0;
+    long long sumOfFloors = 0;
 
-    // BIT를 초기화합니다.
-    bit_init(n);
-
-    long long total_meetings = 0;
-    long long sum_of_floors = 0;
-
-    // 사람들을 순회하면서 만남의 횟수를 계산합니다.
-    for(int i = 0; i < n; i++) {
-        long long floor = (l * people[i].speed) / max_speed;
-        long long addition = floor * i - sum_of_floors - i + bit_prefix_sum(people[i].rank);
-
-        total_meetings += addition;
-
-        sum_of_floors += floor;
-        bit_inc(people[i].rank);
+    for (int i = 0; i < n; ++i) {
+        long long floor = (l * runners[i].speed) / maxSpeed;
+        long long addition = floor * i - sumOfFloors - i + bitPrefixSum(runners[i].rank);
+        
+        totalMeetings += addition;
+        sumOfFloors += floor;
+        bitInc(runners[i].rank);
     }
 
-    // 결과를 출력합니다.
-    cout << total_meetings << endl;
-
+    cout << totalMeetings << endl;
     return 0;
 }
