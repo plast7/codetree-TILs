@@ -1,65 +1,52 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
-#include <unordered_set>
+#include <cstring>
+#include <set>
 
 using namespace std;
 
+#define MAX_N 100000
+
 struct Point {
     int x, y;
-    bool operator==(const Point& other) const {
-        return x == other.x && y == other.y;
+    bool operator<(const Point& other) const {
+        if (x == other.x)
+            return y < other.y;
+        return x < other.x;
     }
 };
 
-namespace std {
-    template <>
-    struct hash<Point> {
-        size_t operator()(const Point& p) const {
-            return hash<int>()(p.x) ^ hash<int>()(p.y);
-        }
-    };
-}
+char commands[MAX_N + 1];
+Point possible_destinations[MAX_N * 2];
+Point offset[MAX_N + 1];
 
-const int dx[4] = {0, 1, 0, -1};
-const int dy[4] = {1, 0, -1, 0};
+const int dx[4] = { 0, 1, 0, -1 };
+const int dy[4] = { 1, 0, -1, 0 };
 
-int rightTurn(int dir) {
-    return (dir + 1) % 4;
-}
+int turn_right(int dir) { return (dir + 1) % 4; }
+int turn_left(int dir) { return (dir + 3) % 4; }
 
-int leftTurn(int dir) {
-    return (dir + 3) % 4;
-}
-
-int rotateX(int dir, const Point& p) {
+int rotate_x(int dir, Point p) {
     if (dir == 0) return p.x;
     if (dir == 1) return p.y;
     if (dir == 2) return -p.x;
     if (dir == 3) return -p.y;
-    return 0;
+    return 0; // Should never reach here
 }
 
-int rotateY(int dir, const Point& p) {
+int rotate_y(int dir, Point p) {
     if (dir == 0) return p.y;
     if (dir == 1) return -p.x;
     if (dir == 2) return -p.y;
     if (dir == 3) return p.x;
-    return 0;
+    return 0; // Should never reach here
 }
 
 int main() {
-    string commands;
     cin >> commands;
+    int L = strlen(commands);
 
-    int n = commands.length();
-    vector<Point> offset(n + 1);
-    unordered_set<Point> unique_points;
-
-    int x = 0, y = 0, dir = 0;
-    offset[n] = {0, 0};
-
-    for (int i = n - 1; i >= 0; --i) {
+    // Compute action of every "suffix" of commands
+    for (int i = L - 1; i >= 0; i--) {
         if (commands[i] == 'F') {
             offset[i].x = offset[i + 1].x;
             offset[i].y = 1 + offset[i + 1].y;
@@ -72,27 +59,34 @@ int main() {
         }
     }
 
-    for (int i = 0; i < n; ++i) {
-        if (commands[i] != 'F') {
-            unique_points.insert({x + dx[dir] + rotateX(dir, offset[i + 1]), y + dy[dir] + rotateY(dir, offset[i + 1])});
+    // Build a list of all possible destination points
+    int x = 0, y = 0, dir = 0, n = 0;
+    set<Point> unique_points;
+    for (int i = 0; i < L; i++) {
+        if (commands[i] != 'F') { 
+            Point p = { x + dx[dir] + rotate_x(dir, offset[i + 1]), y + dy[dir] + rotate_y(dir, offset[i + 1]) };
+            unique_points.insert(p);
         }
-        if (commands[i] != 'L') {
-            unique_points.insert({x + rotateX(leftTurn(dir), offset[i + 1]), y + rotateY(leftTurn(dir), offset[i + 1])});
+        if (commands[i] != 'L') { 
+            Point p = { x + rotate_x(turn_left(dir), offset[i + 1]), y + rotate_y(turn_left(dir), offset[i + 1]) };
+            unique_points.insert(p);
         }
-        if (commands[i] != 'R') {
-            unique_points.insert({x + rotateX(rightTurn(dir), offset[i + 1]), y + rotateY(rightTurn(dir), offset[i + 1])});
-        }
+        if (commands[i] != 'R') { 
+            Point p = { x + rotate_x(turn_right(dir), offset[i + 1]), y + rotate_y(turn_right(dir), offset[i + 1]) };
+            unique_points.insert(p);
+        }   
         if (commands[i] == 'F') {
             x += dx[dir];
             y += dy[dir];
         } else if (commands[i] == 'L') {
-            dir = leftTurn(dir);
+            dir = turn_left(dir);
         } else if (commands[i] == 'R') {
-            dir = rightTurn(dir);
+            dir = turn_right(dir);
         }
     }
 
+    // Output the number of unique points
     cout << unique_points.size() << endl;
-
+    
     return 0;
 }
