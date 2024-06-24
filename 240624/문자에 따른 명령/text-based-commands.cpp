@@ -2,59 +2,57 @@
 #include <vector>
 #include <set>
 #include <string>
-#include <tuple>
+#include <algorithm>
 
 using namespace std;
 
-// 좌표를 나타내는 구조체를 정의합니다.
+// 좌표를 나타내는 구조체
 struct Point {
     int x, y;
-    // 좌표 비교를 위한 연산자를 정의합니다.
+    // 좌표를 비교하는 연산자 오버로딩
     bool operator<(const Point& other) const {
-        return tie(x, y) < tie(other.x, other.y);
+        return x == other.x ? y < other.y : x < other.x;
     }
 };
 
-// 방향에 따른 x, y 좌표 변화량을 정의합니다.
-// 북쪽, 동쪽, 남쪽, 서쪽 순서입니다.
+// 방향에 따른 이동을 나타내는 배열
 const int dx[4] = {0, 1, 0, -1};
 const int dy[4] = {1, 0, -1, 0};
 
-// 오른쪽으로 90도 회전하는 함수입니다.
-int rightTurn(int direction) {
-    return (direction + 1) % 4;
-}
+// 오른쪽으로 90도 회전
+int right_turn(int dir) { return (dir + 1) % 4; }
+// 왼쪽으로 90도 회전
+int left_turn(int dir) { return (dir + 3) % 4; }
 
-// 왼쪽으로 90도 회전하는 함수입니다.
-int leftTurn(int direction) {
-    return (direction + 3) % 4;
-}
-
-// 주어진 방향에서의 x 좌표 변화를 계산하는 함수입니다.
-int rotateX(int direction, Point p) {
-    if (direction == 0) return p.x;
-    if (direction == 1) return p.y;
-    if (direction == 2) return -p.x;
-    if (direction == 3) return -p.y;
+// 현재 방향에 따른 x 좌표 회전
+int rotate_x(int dir, Point p) {
+    if (dir == 0) return p.x;
+    if (dir == 1) return p.y;
+    if (dir == 2) return -p.x;
+    if (dir == 3) return -p.y;
     return 0;
 }
 
-// 주어진 방향에서의 y 좌표 변화를 계산하는 함수입니다.
-int rotateY(int direction, Point p) {
-    if (direction == 0) return p.y;
-    if (direction == 1) return -p.x;
-    if (direction == 2) return -p.y;
-    if (direction == 3) return p.x;
+// 현재 방향에 따른 y 좌표 회전
+int rotate_y(int dir, Point p) {
+    if (dir == 0) return p.y;
+    if (dir == 1) return -p.x;
+    if (dir == 2) return -p.y;
+    if (dir == 3) return p.x;
     return 0;
 }
 
 int main() {
     string commands;
     cin >> commands;
-    int length = commands.length();
+    int length = commands.size();
 
-    // 각 명령어에 따른 좌표 변화를 저장할 벡터를 정의합니다.
+    // 각 명령에 따른 오프셋을 저장하는 벡터
     vector<Point> offset(length + 1);
+    // 유일한 도착 지점을 저장하는 집합
+    set<Point> unique_points;
+
+    // 명령을 역순으로 처리하여 오프셋을 계산
     for (int i = length - 1; i >= 0; --i) {
         if (commands[i] == 'F') {
             offset[i].x = offset[i + 1].x;
@@ -68,33 +66,31 @@ int main() {
         }
     }
 
-    // 도착 지점의 좌표를 저장할 집합을 정의합니다.
-    set<Point> uniquePoints;
-    int x = 0, y = 0, direction = 0;
+    int x = 0, y = 0, dir = 0;
 
-    // 각 명령어에 대해 가능한 모든 경우를 고려합니다.
+    // 명령을 순차적으로 처리하여 도착 지점을 계산
     for (int i = 0; i < length; ++i) {
         if (commands[i] != 'F') {
-            uniquePoints.insert({x + dx[direction] + rotateX(direction, offset[i + 1]), y + dy[direction] + rotateY(direction, offset[i + 1])});
+            unique_points.insert({x + dx[dir] + rotate_x(dir, offset[i + 1]), y + dy[dir] + rotate_y(dir, offset[i + 1])});
         }
         if (commands[i] != 'L') {
-            uniquePoints.insert({x + rotateX(leftTurn(direction), offset[i + 1]), y + rotateY(leftTurn(direction), offset[i + 1])});
+            unique_points.insert({x + rotate_x(left_turn(dir), offset[i + 1]), y + rotate_y(left_turn(dir), offset[i + 1])});
         }
         if (commands[i] != 'R') {
-            uniquePoints.insert({x + rotateX(rightTurn(direction), offset[i + 1]), y + rotateY(rightTurn(direction), offset[i + 1])});
+            unique_points.insert({x + rotate_x(right_turn(dir), offset[i + 1]), y + rotate_y(right_turn(dir), offset[i + 1])});
         }
         if (commands[i] == 'F') {
-            x += dx[direction];
-            y += dy[direction];
+            x += dx[dir];
+            y += dy[dir];
         } else if (commands[i] == 'L') {
-            direction = leftTurn(direction);
+            dir = left_turn(dir);
         } else if (commands[i] == 'R') {
-            direction = rightTurn(direction);
+            dir = right_turn(dir);
         }
     }
 
-    // 서로 다른 도착 지점의 수를 출력합니다.
-    cout << uniquePoints.size() << endl;
+    // 유일한 도착 지점의 수를 출력
+    cout << unique_points.size() << endl;
 
     return 0;
 }
