@@ -55,7 +55,7 @@ def find_largest():
         lst.sort(key = lambda x:(-x[0], x[1], x[2], x[3]))
         final_rotate = lst[0]
         r_cnt, x, y = final_rotate[1], final_rotate[3], final_rotate[2]
-        print("-->", r_cnt, x-1, y-1)
+        # print("-->", r_cnt, x-1, y-1)
         for _ in range(r_cnt+1):
             real_rotate_90(x-1, y-1)  
     else:
