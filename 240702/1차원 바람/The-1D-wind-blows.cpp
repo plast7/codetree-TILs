@@ -61,7 +61,6 @@ int main() {
 
     cin >> height >> width >> command;
 
-    val = (int *)malloc(sizeof(int) * (width + 1));
     init_arr();
     while(command--) {
         cin >> line >> direction;
