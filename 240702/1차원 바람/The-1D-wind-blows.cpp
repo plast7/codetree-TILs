@@ -4,7 +4,7 @@
 using namespace std;
 
 int arr[101][101];
-int *val;
+int val[101];
 int height, width;
 
 void init_arr();
@@ -14,13 +14,11 @@ bool validation(int L) {
     if (L >= height || L < 0)
         return false;
 
-    for(int i = 0; i < width; i++) {
-        memset(val, 0, sizeof(int) * 101);
-        for(int j = 0; j < height; j++) {
-            if (val[arr[i][j]] != 0)
-                return true;
-            val[arr[i][j]] = 1;
-        }
+    for(int i = 0; i <= 100; i++) val[i] = 0;
+    for(int j = 0; j < width; j++) {
+        if (val[arr[L][j]] != 0)
+            return true;
+        val[arr[L][j]] = 1;
     }
     return false;
 }
@@ -29,7 +27,7 @@ bool validation(int L) {
 void solve(int L, bool D) {
     if (L >= height || L < 0)
         return ;
-    
+
     //left
     if (D == false) {
         int first = arr[L][0];
@@ -46,11 +44,13 @@ void solve(int L, bool D) {
         arr[L][0] = last;
     }
 
-    if (validation(L - 1)) {
-        solve(L - 1, !D);
-    }
-    if (validation(L + 1)) {
-        solve(L + 1, !D);
+    if (validation(L)) {
+        if (L > 0 && validation(L - 1)) {
+            solve(L - 1, !D);
+        }
+        if (L < height - 1 && validation(L + 1)) {
+            solve(L + 1, !D);
+        }
     }
 }
 
