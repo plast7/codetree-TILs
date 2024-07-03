@@ -98,7 +98,7 @@ int main()
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++)
                 {
-                    mlist[i][j] = 200;
+                    mlist[i][j] = 20000;
                 }
                 mlist[i][i] = 0;
             }
