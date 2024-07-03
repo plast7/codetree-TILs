@@ -79,7 +79,7 @@ void buildLand() {
         // 양방향 간선에 대해 두 도시간 여러 간선이 주어질 수 있으므로 min 값으로 저장합니다
         A[u][v] = min(A[u][v], w);
         A[v][u] = min(A[v][u], w);
-        assert(1 <= w and w <= 200);
+        assert(1 <= w and w <= 100);
     }
 }
 // 여행 상품을 추가합니다
