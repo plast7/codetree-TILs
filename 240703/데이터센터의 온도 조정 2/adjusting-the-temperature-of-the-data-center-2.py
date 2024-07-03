@@ -10,7 +10,7 @@ for num in range(min_num - 1, max_num + 1):
     for low, high in standards:
         if num < low:
             cnt += c
-        elif low <= num < high:
+        elif low <= num <= high:
             cnt += g
         else:
             cnt += h
