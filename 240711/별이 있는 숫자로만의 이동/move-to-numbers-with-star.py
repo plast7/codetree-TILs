@@ -40,8 +40,8 @@ for i in range(1, n + 1):
         arr2[i + j - 1][n - i + j] = arr[i][j]
 
 # 2차원 배열의 누적합을 구합니다.
-for i in range(1, 2 * n):
-    for j in range(1, 2 * n):
+for i in range(1, 2 * n + 1):
+    for j in range(1, 2 * n + 1):
         s[i][j] = s[i][j-1] + s[i-1][j] - s[i-1][j-1] + arr2[i][j];
     
 # 한 변의 길이가 k2인 정사각형 중 부분합이 최대인 사각형을 찾습니다.
