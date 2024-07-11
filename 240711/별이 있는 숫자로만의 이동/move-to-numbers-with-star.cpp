@@ -34,7 +34,7 @@ int main() {
     int k2 = min(2 * k + 1, 2 * n);
     for(int i = k2; i <= 2 * n; i++)
         for(int j = k2; j <= 2 * n; j++) {
-            if(board2[i - k2 + 1][j - k2 + 1])
+            if(board2[i - k2 / 2][j - k2 / 2])
                 ans = max(ans, s[i][j] - s[i][j - k2] - s[i - k2][j] + s[i - k2][j - k2]);
     }
     
