@@ -32,8 +32,8 @@ int main() {
 
     // 한 변의 길이가 k2인 정사각형 중 부분합이 최대인 사각형을 찾습니다.
     int k2 = min(2 * k + 1, 2 * n);
-    for(int i = k2; i <= 2 * n; i++)
-        for(int j = k2; j <= 2 * n; j++) {
+    for(int i = k2; i <= 2 * n + 1; i++)
+        for(int j = k2; j <= 2 * n + 1; j++) {
             if(board2[i - k2 / 2][j - k2 / 2])
                 ans = max(ans, s[i][j] - s[i][j - k2] - s[i - k2][j] + s[i - k2][j - k2]);
     }
