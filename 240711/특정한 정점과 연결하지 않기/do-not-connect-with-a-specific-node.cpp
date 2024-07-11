@@ -54,8 +54,9 @@ int main(void) {
 
 	int ans = s[A];
 
-	for (int i = 0;i < min(k, (int)pq.size());i++) {
-		ans += pq.top();
+	for (int i = 0;i < k;i++) {
+		if(pq.empty()) break;
+        ans += pq.top();
 		pq.pop();
 	}
 	cout << ans;
