@@ -1,47 +1,62 @@
 #include <iostream>
 #include <algorithm>
+#include <vector>
+#include <map>
 
 using namespace std;
-typedef pair<int, int> pii;
+typedef pair<int, int> Interval;
 
-int main()
-{
-    pii cover1, cover2[100005];
-    int n, point=1000000000, sum=0, maxi=0;
-    int i, s=0;
-    cover1.first=1000000000, cover1.second=1000000000;
-    
-    cin >> n;
-    for(i=0;i<n;i++){
-        char dir;
-        int step;
-        cin >> step >> dir;
-        if(dir=='R'){
-            point+=step;
-            cover2[s].first=point-step, cover2[s++].second=min(cover1.second, point);
-            if(cover2[s-1].first==cover2[s-1].second)
-                s--;
-            if(point>cover1.second)
-                cover1.second=point;
-        }
-        else{
-            point-=step;
-            cover2[s].first=max(cover1.first, point), cover2[s++].second=point+step;
-            if(cover2[s-1].first==cover2[s-1].second)
-                s--;
-            if(point<cover1.first)
-                cover1.first=point;
+int main() {
+    int numCommands;
+    cin >> numCommands;
+
+    // 명령어를 저장할 벡터
+    vector<Interval> intervals;
+    int currentPosition = 0;
+
+    // 명령어를 입력받아 intervals 벡터에 저장합니다.
+    for (int i = 0; i < numCommands; ++i) {
+        int steps;
+        char direction;
+        cin >> steps >> direction;
+
+        if (direction == 'R') {
+            int newPosition = currentPosition + steps;
+            intervals.push_back({currentPosition, newPosition});
+            currentPosition = newPosition;
+        } else {
+            int newPosition = currentPosition - steps;
+            intervals.push_back({newPosition, currentPosition});
+            currentPosition = newPosition;
         }
     }
-    sort(cover2, cover2+s);
-    for(i=0;i<s;i++){
-        if(cover2[i].second>maxi){
-            sum+=cover2[i].second-max(cover2[i].first, maxi);
-            maxi=cover2[i].second;
-        }
+
+    // intervals 벡터를 정렬합니다.
+    sort(intervals.begin(), intervals.end());
+
+    // 구간의 시작과 끝을 기록할 맵
+    map<int, int> pointCount;
+
+    // 각 구간의 시작과 끝을 맵에 기록합니다.
+    for (const auto& interval : intervals) {
+        pointCount[interval.first]++;
+        pointCount[interval.second]--;
     }
-    
-    cout << sum << endl;
-    
+
+    int overlappedLength = 0;
+    int currentOverlap = 0;
+    int lastPoint = pointCount.begin()->first;
+
+    // 맵을 순회하며 2번 이상 지나간 구간의 길이를 계산합니다.
+    for (const auto& point : pointCount) {
+        if (currentOverlap >= 2) {
+            overlappedLength += point.first - lastPoint;
+        }
+        currentOverlap += point.second;
+        lastPoint = point.first;
+    }
+
+    cout << overlappedLength << endl;
+
     return 0;
 }
