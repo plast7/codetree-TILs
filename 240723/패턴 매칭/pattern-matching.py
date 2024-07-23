@@ -28,7 +28,7 @@ for j in range(m):
         elif b[j + 1] == '.':
             is_pos[i + 1][j + 1] = True
         else:
-            if a[i + 1] == b[j + 1]:
+            if i != n and a[i + 1] == b[j + 1]:
                 is_pos[i + 1][j + 1] = True
 
 # 최종적으로 문자열 'a'와 'b'가 정규 표현식 패턴에 따라 일치하는지 결과를 출력합니다.
