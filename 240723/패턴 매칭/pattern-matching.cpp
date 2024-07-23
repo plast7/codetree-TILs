@@ -16,7 +16,7 @@ int main() {
 
     // is_pos[i][j] :: 문자열 a의 i번째와 표현식 b의 j번째까지가 서로 일치하면 true, 아니면 false
     for(int j = 0; j < m; j++) {
-        for(int i = 0; i < n; i++) {
+        for(int i = 0; i <= n; i++) {
             if(!is_pos[i][j]) continue;
 
             if(j != m - 1 && b[j + 2] == '*') {
