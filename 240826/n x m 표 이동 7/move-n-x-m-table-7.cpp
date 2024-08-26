@@ -28,14 +28,6 @@ int main(){
         }
     }
     scanf("%d %d %d %d %d %d", &h, &w, &si, &sj, &ei, &ej);
-    for(int i = 0; i < h; i++) {
-        for(int j = 0; j < w; j++) {
-            if(a[si + i][sj + j]) {
-                printf("-1");
-                return 0;
-            }
-        }
-    }
     queue<pos> q;
     q.push({si,sj,0});
     visit[si][sj]=true;
