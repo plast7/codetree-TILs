@@ -106,8 +106,8 @@ for q in range(Q):
                     #사라짐 처리
                     if k_dict[idx][4]<=0:
                         k_dict[idx][7]=1
-    if q==84:
-       breakpoint()
+    # if q==84:
+    #    breakpoint()
     ans1 = 0
     for n in range(1, N + 1):
         if k_dict[n][7] == 0:
