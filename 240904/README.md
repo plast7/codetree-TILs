@@ -3,7 +3,7 @@
 # 🥇 실전 훈련
 |총 문제 수|티어|유형|
 |---:|---|---|
-|10|![Silver3][s3] ~ ![Platinum4][p4]|`Simulation` `Tree` `Prefix Sum` `BFS` `DP` `Binomial Coefficient (Pascal's Triangle)`|
+|10|![Silver3][s3] ~ ![Platinum4][p4]|`Simulation` `DP` `Prefix Sum` `Tree` `BFS` `Binomial Coefficient (Pascal's Triangle)`|
 
 |기록분류|이름|티어|유형|상태|최근 제출 코드|
 |---|---|---|---|---|---|
