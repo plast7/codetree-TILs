@@ -112,7 +112,7 @@ for q in range(Q):
     for n in range(1, N + 1):
         if k_dict[n][7] == 0:
             ans1 += k_dict[n][5]
-    print(q, ans1)
+    # print(q, ans1)
 #breakpoint()
 ans=0
 for n in range(1,N+1):
