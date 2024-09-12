@@ -1,69 +1,71 @@
 #include <iostream>
-#include <algorithm>
 #include <vector>
+#include <algorithm>
+#include <climits>
+
 using namespace std;
 
-const int INF = 99999999;
-
-// 각 칸의 비용을 저장하는 배열
-int cost[510][510];
-// dp 배열: dp[x][y][dir]는 (x, y) 위치에 dir 방향으로 도착했을 때의 최소 비용을 저장합니다.
-// dir: 0은 남서쪽, 1은 남쪽, 2는 남동쪽을 의미합니다.
-int dp[510][510][3]; 
+// 비용을 저장하는 2차원 벡터
+vector<vector<int>> cost;
+// dp 배열을 저장하는 3차원 벡터
+vector<vector<vector<int>>> dp;
 int rows, cols;
 
-// (x, y) 위치에서 dir 방향으로 이동했을 때의 최소 비용을 찾는 함수
-int findMinCost(int x, int y, int dir) {
-    // 만약 가장 아래 행에 도달했다면 더 이상 이동할 필요가 없으므로 0을 반환합니다.
+// 최소 경로 합을 찾는 함수
+int findMinPathSum(int x, int y, int dir) {
+    // 만약 마지막 행에 도달했다면 0을 반환합니다.
     if (x == rows) {
         return 0;
     }
 
     // 이미 계산된 값이 있다면 그 값을 반환합니다.
-    if (dp[x][y][dir] != INF) {
+    if (dp[x][y][dir] != INT_MAX) {
         return dp[x][y][dir];
     }
 
-    // 남서쪽으로 이동하는 경우
+    // 왼쪽으로 이동
     if (dir != 0 && y - 1 >= 0) {
-        dp[x][y][dir] = findMinCost(x + 1, y - 1, 0) + cost[x][y];
+        dp[x][y][dir] = findMinPathSum(x + 1, y - 1, 0) + cost[x][y];
     }
 
-    // 남쪽으로 이동하는 경우
+    // 아래로 이동
     if (dir != 1) {
-        dp[x][y][dir] = min(dp[x][y][dir], findMinCost(x + 1, y, 1) + cost[x][y]);
+        dp[x][y][dir] = min(dp[x][y][dir], findMinPathSum(x + 1, y, 1) + cost[x][y]);
     }
 
-    // 남동쪽으로 이동하는 경우
+    // 오른쪽으로 이동
     if (dir != 2 && y + 1 < cols) {
-        dp[x][y][dir] = min(dp[x][y][dir], findMinCost(x + 1, y + 1, 2) + cost[x][y]);
+        dp[x][y][dir] = min(dp[x][y][dir], findMinPathSum(x + 1, y + 1, 2) + cost[x][y]);
     }
 
     return dp[x][y][dir];
 }
 
 int main() {
-    // 행과 열의 개수를 입력받습니다.
+    // 행과 열의 크기를 입력받습니다.
     cin >> rows >> cols;
 
-    // 각 칸의 비용을 입력받고 dp 배열을 초기화합니다.
+    // 비용 배열의 크기를 조정합니다.
+    cost.resize(rows, vector<int>(cols));
+    // dp 배열의 크기를 조정합니다.
+    dp.resize(rows, vector<vector<int>>(cols, vector<int>(4, INT_MAX)));
+
+    // 비용 배열을 입력받습니다.
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
             cin >> cost[i][j];
-            for (int k = 0; k < 3; k++) {
-                dp[i][j][k] = INF;
-            }
         }
     }
 
-    int minCost = INF;
-    // 가장 위의 행의 모든 위치에서 출발하여 최소 비용을 찾습니다.
+    // 최소 경로 합을 저장할 변수를 초기화합니다.
+    int minPathSum = INT_MAX;
+    // 첫 번째 행의 모든 열에 대해 최소 경로 합을 계산합니다.
     for (int i = 0; i < cols; i++) {
-        minCost = min(minCost, findMinCost(0, i, 3));
+        minPathSum = min(minPathSum, findMinPathSum(0, i, 3));
     }
 
-    // 최소 비용을 출력합니다.
-    cout << minCost;
+    // 최소 경로 합을 출력합니다.
+    cout << minPathSum;
 
     return 0;
 }
