@@ -23,7 +23,7 @@ int main() {
         int min_value = elements[i];
         int max_value = elements[i];
         // 현재 위치부터 역순으로 구간을 확장해가며 최소값과 최대값을 갱신합니다.
-        for (int j = i; j >= 1; j--) {
+        for (int j = i; j >= max(j - 2, 1); j--) {
             min_value = min(min_value, elements[j]);
             max_value = max(max_value, elements[j]);
             // 현재 구간의 최대 차이를 갱신합니다.
