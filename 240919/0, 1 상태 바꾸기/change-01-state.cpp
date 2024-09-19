@@ -1,55 +1,51 @@
 #include <iostream>
-#include <vector>
 using namespace std;
+
+// 수열을 저장할 배열을 선언합니다.
+int sequence[4001];
 
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     
-    // 전구의 개수와 명령어의 개수를 입력받습니다.
-    int num_bulbs, num_commands;
-    cin >> num_bulbs >> num_commands;
+    // 입력받을 원소의 개수와 명령어의 개수를 선언합니다.
+    int numElements, numCommands;
+    cin >> numElements >> numCommands;
     
-    // 전구 상태를 저장할 벡터를 선언합니다. 1-based index를 사용하기 위해 크기를 num_bulbs + 1로 설정합니다.
-    vector<int> bulbs(num_bulbs + 1, 0);
-    
-    // 초기 전구 상태를 입력받습니다.
-    for(int i = 1; i <= num_bulbs; i++){
-        cin >> bulbs[i];
+    // 수열의 각 원소를 입력받습니다.
+    for(int i = 1; i <= numElements; i++){
+        cin >> sequence[i];
     }
     
-    // 각 명령어를 처리합니다.
-    for(int i = 0; i < num_commands; i++){
-        int command_type, start_index, end_value;
-        cin >> command_type >> start_index >> end_value;
+    // 주어진 명령어의 개수만큼 반복하여 명령어를 처리합니다.
+    for(int i = 0; i < numCommands; i++){
+        int commandType, startIndex, endIndex;
+        cin >> commandType >> startIndex >> endIndex;
         
-        // 명령어 타입에 따라 전구 상태를 변경합니다.
-        if(command_type == 1) {
-            // 명령어 1: start_index 번째 전구의 상태를 end_value로 변경합니다.
-            bulbs[start_index] = end_value;
-        } 
-        else if(command_type == 2) {
-            // 명령어 2: start_index부터 end_value까지의 전구 상태를 반전시킵니다.
-            for(int j = start_index; j <= end_value; j++){
-                bulbs[j] = !bulbs[j];
+        // 명령어의 종류에 따라 수열을 변환합니다.
+        if(commandType == 1) {
+            // 1번 명령어: startIndex 위치의 원소를 endIndex 값으로 변경합니다.
+            sequence[startIndex] = endIndex;
+        } else if(commandType == 2) {
+            // 2번 명령어: startIndex부터 endIndex까지의 원소를 0은 1로, 1은 0으로 변경합니다.
+            for(int j = startIndex; j <= endIndex; j++){
+                sequence[j] = 1 - sequence[j];
             }
-        } 
-        else if(command_type == 3) {
-            // 명령어 3: start_index부터 end_value까지의 전구 상태를 0으로 변경합니다.
-            for(int j = start_index; j <= end_value; j++){
-                bulbs[j] = 0;
+        } else if(commandType == 3) {
+            // 3번 명령어: startIndex부터 endIndex까지의 원소를 0으로 변경합니다.
+            for(int j = startIndex; j <= endIndex; j++){
+                sequence[j] = 0;
             }
-        } 
-        else if(command_type == 4) {
-            // 명령어 4: start_index부터 end_value까지의 전구 상태를 1로 변경합니다.
-            for(int j = start_index; j <= end_value; j++){
-                bulbs[j] = 1;
+        } else if(commandType == 4) {
+            // 4번 명령어: startIndex부터 endIndex까지의 원소를 1으로 변경합니다.
+            for(int j = startIndex; j <= endIndex; j++){
+                sequence[j] = 1;
             }
         }
     }
     
-    // 최종 전구 상태를 출력합니다.
-    for(int i = 1; i <= num_bulbs; i++){
-        cout << bulbs[i] << ' ';
+    // 명령어를 모두 수행한 후의 수열을 출력합니다.
+    for(int i = 1; i <= numElements; i++){
+        cout << sequence[i] << ' ';
     }
 }
