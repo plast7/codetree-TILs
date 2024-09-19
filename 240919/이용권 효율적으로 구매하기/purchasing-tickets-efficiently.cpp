@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <vector>
 #include <cstring>
-#include <climit>
+#include <climits>
 using namespace std;
 
 int total_days, closed_days;
