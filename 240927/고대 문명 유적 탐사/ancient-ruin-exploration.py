@@ -106,7 +106,7 @@ for _ in range (k):
             # 선택된 격자는 항상 회전을 진행해야 함.
             # 아래의 반복문은 r을 회전 각도(90, 180, 270)의 값으로 설정한 뒤 사용자 정의 함수로 2차원 배열을 회전시키는 역할인데,
             # r의 반복문을 (1, 4)로 했을 때와 (0, 4)로 했을 때 모두 정답으로 처리됨
-            for r in range (0, 4):
+            for r in range (1, 4):
                 rotated_grid = rotate(r, i, j)
                 value = find(rotated_grid)
                 
