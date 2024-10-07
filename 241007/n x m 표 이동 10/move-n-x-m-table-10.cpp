@@ -1,6 +1,7 @@
 #include <iostream>
 #include <queue>
 #include <vector>
+#include <climits>
 using namespace std;
 
 // 전역 변수 선언
