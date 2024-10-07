@@ -5,77 +5,72 @@
 using namespace std;
 
 // 변수 선언
-int rows, cols, max_time;
+int numRows, numCols, maxTime;
 char grid[100][100];
-
 // 방문 여부를 기록하는 배열입니다.
-// visited[i][j][0]은 검을 얻기 전 방문 여부를,
-// visited[i][j][1]은 검을 얻은 후 방문 여부를 기록합니다.
+// visited[i][j][0]은 2를 지나기 전의 방문 여부를,
+// visited[i][j][1]은 2를 지난 후의 방문 여부를 기록합니다.
 bool visited[100][100][2];
-
-// 상하좌우 이동을 위한 방향 배열입니다.
+// 상하좌우 네 방향을 나타내는 배열입니다.
 int directions[4][2] = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} };
 
 // BFS를 통해 최단 시간을 구하는 함수입니다.
 void bfs() {
-    // 큐에는 현재 위치와 검을 얻었는지 여부, 현재 시간을 저장합니다.
+    // 큐를 선언하고 초기 위치를 넣어줍니다.
+    // 큐의 원소는 (현재 행, 현재 열), (2를 지났는지 여부, 현재 시간)입니다.
     queue<pair<pair<int, int>, pair<bool, int>>> q;
-    // 시작 위치는 (0, 0)이며, 검을 얻지 않은 상태로 시작합니다.
     q.push({ {0, 0}, {false, 0} });
 
     // 큐가 빌 때까지 반복합니다.
     while (!q.empty()) {
-        // 큐의 front에서 현재 위치와 상태를 가져옵니다.
-        int current_row = q.front().first.first;
-        int current_col = q.front().first.second;
-        bool has_sword = q.front().second.first;
-        int current_time = q.front().second.second;
+        // 큐의 맨 앞 원소를 꺼내옵니다.
+        int currentRow = q.front().first.first;
+        int currentCol = q.front().first.second;
+        bool passedThroughTwo = q.front().second.first;
+        int currentTime = q.front().second.second;
         q.pop();
 
-        // 현재 시간이 최대 시간을 초과하면 실패를 출력합니다.
-        if (current_time > max_time) {
+        // 현재 시간이 최대 시간을 초과하면 Fail을 출력하고 종료합니다.
+        if (currentTime > maxTime) {
             cout << "Fail";
             return;
         }
-        // 목적지에 도달하면 현재 시간을 출력합니다.
-        if (current_row == rows - 1 && current_col == cols - 1) {
-            cout << current_time;
+        // 목적지에 도달하면 현재 시간을 출력하고 종료합니다.
+        if (currentRow == numRows - 1 && currentCol == numCols - 1) {
+            cout << currentTime;
             return;
         }
 
-        // 4방향으로 이동을 시도합니다.
+        // 네 방향으로 이동을 시도합니다.
         for (int i = 0; i < 4; i++) {
-            int next_row = current_row + directions[i][0];
-            int next_col = current_col + directions[i][1];
-            int next_time = current_time + 1;
+            int newRow = currentRow + directions[i][0];
+            int newCol = currentCol + directions[i][1];
+            int newTime = currentTime + 1;
 
-            // 이동할 위치가 유효한 범위 내에 있는지 확인합니다.
-            if (next_row >= 0 && next_row < rows && next_col >= 0 && next_col < cols) {
-                // 검을 가지고 있는 경우
-                if (has_sword) {
-                    // 검을 가지고 있는 상태에서 방문하지 않은 경우
-                    if (!visited[next_row][next_col][1]) {
-                        q.push({ {next_row, next_col}, {true, next_time} });
-                        visited[next_row][next_col][1] = true;
+            // 새로운 위치가 유효한 범위 내에 있는지 확인합니다.
+            if (newRow >= 0 && newRow < numRows && newCol >= 0 && newCol < numCols) {
+                // 2를 지난 후라면 1도 지나갈 수 있습니다.
+                if (passedThroughTwo) {
+                    // 아직 방문하지 않은 경우에만 큐에 추가합니다.
+                    if (!visited[newRow][newCol][1]) {
+                        q.push({ {newRow, newCol}, {true, newTime} });
+                        visited[newRow][newCol][1] = true;
                     }
-                } 
-                // 검을 가지고 있지 않은 경우
-                else {
-                    // 0인 칸으로 이동할 수 있는 경우
-                    if (grid[next_row][next_col] == '0' && !visited[next_row][next_col][0]) {
-                        q.push({ {next_row, next_col}, {false, next_time} });
-                        visited[next_row][next_col][0] = true;
-                    } 
-                    // 2인 칸으로 이동하여 검을 얻는 경우
-                    else if (grid[next_row][next_col] == '2' && !visited[next_row][next_col][0]) {
-                        q.push({ {next_row, next_col}, {true, next_time} });
-                        visited[next_row][next_col][1] = true;
+                } else {
+                    // 0인 경우에만 지나갈 수 있습니다.
+                    if (grid[newRow][newCol] == '0' && !visited[newRow][newCol][0]) {
+                        q.push({ {newRow, newCol}, {false, newTime} });
+                        visited[newRow][newCol][0] = true;
+                    // 2를 지나면 이후로는 1도 지나갈 수 있습니다.
+                    } else if (grid[newRow][newCol] == '2' && !visited[newRow][newCol][0]) {
+                        q.push({ {newRow, newCol}, {true, newTime} });
+                        visited[newRow][newCol][1] = true;
                     }
                 }
             }
         }
     }
-    // 큐가 비었는데도 목적지에 도달하지 못한 경우 실패를 출력합니다.
+    // 큐가 비었는데도 목적지에 도달하지 못했다면 Fail을 출력합니다.
     cout << "Fail";
 }
 
@@ -84,15 +79,14 @@ int main() {
     cin.tie(0);
     cout.tie(0);
 
-    // 입력:
-    cin >> rows >> cols >> max_time;
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
+    // 입력을 받습니다.
+    cin >> numRows >> numCols >> maxTime;
+    for (int i = 0; i < numRows; i++) {
+        for (int j = 0; j < numCols; j++) {
             cin >> grid[i][j];
         }
     }
-
-    // BFS를 통해 최소 시간을 구합니다.
+    // BFS를 실행합니다.
     bfs();
     return 0;
 }
