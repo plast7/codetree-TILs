@@ -1,40 +1,47 @@
 #include <iostream>
+#include <vector>
+#include <cstring>
 #include <cstdio>
 
 using namespace std;
 
-const int MOD = 2012;
-const int MAXN = 1010;
+// MOD 값을 정의합니다. 이는 결과를 2012로 나누기 위한 값입니다.
+#define MOD 2012
+// 최대 문자열 길이를 정의합니다.
+#define MAX_LENGTH 1010
 
-int dp[MAXN]; // dp[i] represents the number of ways to reach balance i
+// ways 배열은 각 균형 상태에서 가능한 색칠 방법의 수를 저장합니다.
+int ways[MAX_LENGTH];
 
 int main() {
-    int balance = 1; // Initial balance of parentheses
-    dp[1] = 1;       // One way to have balance 1 at the beginning
+    // 문자열을 입력받습니다.
+    string st;
+    cin >> st;
 
-    int ch;
-    // Read characters one by one until balance drops to 0 or end of input
-    while (balance > 0 && ((ch = cin.get()) == '(' || ch == ')')) {
-        int dir = (ch == '(') ? 1 : -1; // Direction: +1 for '(', -1 for ')'
-        balance += dir;                 // Update the balance
+    // 초기 균형 상태를 1로 설정합니다. 예외를 처리하기 위해 문자열이
+    // 가장 큰 괄호 () 에 감싸져있다고 생각합니다.
+    int balance = 1;
+    // 첫 번째 '('에 대한 기본 경우의 수는 1입니다.
+    ways[1] = 1;
 
-        if (dir == -1) {
-            // If we read ')', we are closing a parenthesis
-            for (int i = 1; i <= balance; ++i) {
-                dp[i] = (dp[i] + dp[i + 1]) % MOD;
-            }
-        } else {
-            // If we read '(', we are opening a parenthesis
-            for (int i = balance; i >= 1; --i) {
-                dp[i] = (dp[i] + dp[i - 1]) % MOD;
-            }
+    // 입력 문자열을 두번째 문자열부터 한 문자씩 읽어들입니다.
+    for (int i = 0; i < st.size() && balance > 0; i++) {
+        // 현재 문자가 '('이면 1을 더하고, ')'이면 1을 뺍니다.
+        char ch = st[i];
+        int direction = (ch == '(') ? 1 : -1;
+        balance += direction;
+
+        // 현재 균형 상태에서 가능한 모든 경우의 수를 업데이트합니다.
+        for (int j = (direction < 0) ? 1 : balance; 1 <= j && j <= balance; j -= direction) {
+            // 현재 상태에서 가능한 경우의 수를 업데이트합니다.
+            ways[j] += ways[j - direction];
+            // MOD 값을 초과하지 않도록 조정합니다.
+            if (ways[j] >= MOD) ways[j] -= MOD;
         }
-
-        dp[balance + 1] = 0; // Reset the dp value beyond current balance
+        // 다음 위치의 경우의 수를 초기화합니다.
+        ways[balance + 1] = 0;
     }
 
-    // If balance is back to 1 (properly balanced), output dp[1], else output 0
-    cout << ((balance == 1) ? dp[1] : 0) << endl;
-
-    return 0;
+    // 최종 균형 상태가 1이면 가능한 경우의 수를 출력합니다. 그렇지 않으면 0을 출력합니다.
+    cout << (balance == 1 ? ways[1] : 0) << endl;
 }
