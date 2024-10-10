@@ -17,8 +17,9 @@ int main() {
     cin >> secondNumber;
 
     // 실수를 소수점 둘째 자리까지 반올림하여 출력하기 위해
-    // fixed와 setprecision을 사용합니다.
-    cout << fixed << setprecision(2);
+    // fixed와 precision을 사용합니다.
+    cout << fixed;
+    cout.precision(2);
 
     // 두 번째 실수를 먼저 출력합니다.
     cout << secondNumber << endl;
