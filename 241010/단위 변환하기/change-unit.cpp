@@ -12,7 +12,8 @@ int main() {
     double feet_to_cm = 30.48;      // 1피트는 30.48cm입니다.
     
     // 소수점 둘째 자리까지 출력하기 위해 설정합니다.
-    cout << fixed << setprecision(2);
+    cout << fixed;
+    cout.setprecision(2);
 
     // 마일을 센티미터로 변환하여 출력합니다.
     cout << miles << " mi = " << miles * miles_to_cm << endl;
