@@ -1,35 +1,25 @@
-#include<bits/stdc++.h>
-#define ll long long
-#define pii pair<int,int>
-#define pll pair<ll,ll>
-#define PB push_back
-#define fi first
-#define se second
-#define all(v) (v).begin(), (v).end()
-#define For(i,j,k) for (int i=(int)(j);i<=(int)(k);i++)
-#define Rep(i,j,k) for (int i=(int)(j);i>=(int)(k);i--)
-#define debug1 puts("--@111%--")
-#define debug2 puts("--@222%--")
-#define debug3 puts("--@333%--")
-#define y1 ysgjowiaef
+#include <iostream>
 using namespace std;
-
-#define INF 1987654321
 
 int main() {
     int n;
+    cin >> n; // 사용자로부터 n을 입력받습니다.
 
-    int cnt = 9;
-
-    cin >> n;
-
-    For(i, 1, n) {
-        For(j, 1, n) {
-            cout << cnt << " ";
-            cnt -= 2;
-            if(cnt == -1)
-                cnt = 9;
+    // n개의 줄을 출력하기 위해 반복문을 사용합니다.
+    int current_number = 9;
+    for (int row = 0; row < n; row++) {
+        // 각 줄에 n개의 숫자를 출력하기 위해 반복문을 사용합니다.
+        for (int col = 0; col < n; col++) {
+            cout << current_number << " "; // 현재 숫자를 출력합니다.
+            
+            // 다음 숫자는 현재 숫자에서 2를 뺀 값입니다.
+            current_number -= 2;
+            
+            // 만약 숫자가 1보다 작아지면, 다시 9로 돌아갑니다.
+            if (current_number < 1) {
+                current_number = 9;
+            }
         }
-        cout << endl;
+        cout << endl; // 한 줄의 숫자 출력을 마치면 줄바꿈을 합니다.
     }
 }
