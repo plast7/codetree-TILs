@@ -1,64 +1,65 @@
-#include <iostream>
-#include <cmath>
-#include <string>
+#include <stdio.h>
+#include <math.h>
+#include <string.h>
 
-using namespace std;
+int n, m;
 
-// 정수 부분을 이진법으로 변환하여 출력하는 함수입니다.
-void printIntegerPart(int integerPart, int base) {
-    // 정수 부분이 0인 경우, 바로 0을 출력합니다.
-    if (integerPart == 0) {
-        cout << "0";
-        return;
-    }
+char s[100];
+int v[200];
+char d[200];
 
-    // 변환 결과를 저장할 문자열입니다.
-    string result;
-    // 정수 부분을 base(2)로 나누어가며 변환합니다.
-    while (integerPart > 0) {
-        // 나머지를 구하여 이진법 자릿수를 결정합니다.
-        result = char('0' + (integerPart % base)) + result;
-        // 정수 부분을 base로 나누어 다음 자릿수를 구합니다.
-        integerPart /= base;
-    }
+void print(int num, int base) {
+  if (num == 0) {
+    printf("0");
+    return;
+  }
 
-    // 변환된 이진법 정수 부분을 출력합니다.
-    cout << result;
+  int c = 0;
+  int r[101];
+
+  while (num) {
+    r[c++] = d[num % base];
+    num /= base;
+  }
+
+  for (int i = c - 1; i >= 0; i--) {
+    printf("%c", r[i]);
+  }
 }
 
 int main() {
-    // 입력을 받을 문자열입니다.
-    string input;
-    cin >> input;
+  for (int i = '0'; i <= '9'; i++) {
+    v[i] = i - '0';
+    d[i - '0'] = i;
+  }
+  for (int i = 'a'; i <= 'z'; i++) {
+    v[i] = i - 'a' + 10;
+    d[i - 'a' + 10] = i;
+  }
 
-    // 소수점 위치를 찾습니다.
-    size_t dotPosition = input.find('.');
-    // 정수 부분을 추출하여 정수로 변환합니다.
-    int integerPart = stoi(input.substr(0, dotPosition));
-    // 소수 부분을 문자열로 추출합니다.
-    string fractionalPartStr = input.substr(dotPosition + 1);
+  int base = 10;
+  int target = 2;
 
-    // 정수 부분을 이진법으로 변환하여 출력합니다.
-    printIntegerPart(integerPart, 2);
+  scanf("%d.%s", &n, s);
 
-    // 소수점 출력
-    cout << ".";
-
-    // 소수 부분을 10진수로 변환합니다.
-    int fractionalPart = 0;
-    for (char digit : fractionalPartStr) {
-        fractionalPart = fractionalPart * 10 + (digit - '0');
+  for (int i = 0; i < 4; i++) {
+    if ('0' <= s[i] && s[i] <= '9') {
+      m = m * 10 + s[i] - '0';
     }
-
-    // 소수 부분을 이진법으로 변환하여 4자리까지 출력합니다.
-    for (int i = 0; i < 4; i++) {
-        // 소수 부분에 2를 곱합니다.
-        fractionalPart *= 2;
-        // 정수 부분을 출력합니다.
-        cout << fractionalPart / 100000;
-        // 소수 부분만 남깁니다.
-        fractionalPart %= 100000;
+    else {
+      m *= 10;
     }
+  }
 
-    return 0;
+  print(n, target);
+
+  printf(".");
+
+  for (int i = 0; i < 4; i++) {
+    m *= 2;
+    printf("%d", m / 10000);
+    m %= 10000;
+  }
+
+  return 0;
 }
