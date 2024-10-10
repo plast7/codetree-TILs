@@ -4,79 +4,55 @@
 
 using namespace std;
 
-// 정수부와 소수부를 저장할 변수 선언
-int integerPart, fractionalPart;
-// 소수부를 문자열로 저장할 배열
-char fractionalString[100];
-// 각 자리의 값을 저장할 배열
-int digitValue[200];
-// 각 자리의 문자를 저장할 배열
-char digitChar[200];
-
-// 정수를 이진법으로 변환하여 출력하는 함수
-void printIntegerInBinary(int number, int base) {
-    // number가 0일 경우 바로 0을 출력하고 종료합니다.
-    if (number == 0) {
+// 정수 부분을 주어진 진법으로 변환하여 출력하는 함수입니다.
+void printIntegerPart(int integerPart, int base) {
+    // 정수 부분이 0인 경우 바로 0을 출력합니다.
+    if (integerPart == 0) {
         cout << "0";
         return;
     }
 
-    // 나머지를 저장할 배열과 인덱스 변수 선언
-    int index = 0;
-    int remainder[101];
-
-    // number가 0이 될 때까지 나누기를 반복합니다.
-    while (number) {
-        // 나머지를 저장합니다.
-        remainder[index++] = digitChar[number % base];
-        // number를 base로 나눕니다.
-        number /= base;
+    // 변환된 결과를 저장할 문자열입니다.
+    string result;
+    // 정수 부분을 주어진 진법으로 변환합니다.
+    while (integerPart > 0) {
+        // 현재 자리의 값을 계산하여 문자열 앞에 추가합니다.
+        result = char('0' + (integerPart % base)) + result;
+        // 다음 자리로 이동하기 위해 정수 부분을 base로 나눕니다.
+        integerPart /= base;
     }
 
-    // 나머지를 역순으로 출력하여 이진법으로 변환된 값을 출력합니다.
-    for (int i = index - 1; i >= 0; i--) {
-        cout << remainder[i];
-    }
+    // 변환된 결과를 출력합니다.
+    cout << result;
 }
 
 int main() {
-    // 숫자와 문자를 매핑하는 배열을 초기화합니다.
-    for (int i = '0'; i <= '9'; i++) {
-        digitValue[i] = i - '0';
-        digitChar[i - '0'] = i;
-    }
-    for (int i = 'a'; i <= 'z'; i++) {
-        digitValue[i] = i - 'a' + 10;
-        digitChar[i - 'a' + 10] = i;
-    }
+    // 입력을 받을 문자열입니다.
+    string input;
+    cin >> input;
 
-    // 10진법과 2진법을 나타내는 변수
-    int base = 10;
-    int targetBase = 2;
+    // 소수점 위치를 찾습니다.
+    size_t dotPosition = input.find('.');
+    // 정수 부분을 추출하여 정수로 변환합니다.
+    int integerPart = stoi(input.substr(0, dotPosition));
+    // 소수 부분을 문자열로 추출합니다.
+    string fractionalPartStr = input.substr(dotPosition + 1);
 
-    // 입력을 받아 정수부와 소수부를 분리합니다.
-    scanf("%d.%s", &integerPart, fractionalString);
-
-    // 소수부를 정수로 변환합니다.
-    for (int i = 0; i < 4; i++) {
-        if ('0' <= fractionalString[i] && fractionalString[i] <= '9') {
-            fractionalPart = fractionalPart * 10 + fractionalString[i] - '0';
-        } else {
-            fractionalPart *= 10;
-        }
-    }
-
-    // 정수부를 이진법으로 변환하여 출력합니다.
-    printIntegerInBinary(integerPart, targetBase);
-
-    // 소수부를 이진법으로 변환하여 출력합니다.
+    // 정수 부분을 이진법으로 변환하여 출력합니다.
+    printIntegerPart(integerPart, 2);
     cout << ".";
 
-    // 소수부를 4자리까지 이진법으로 변환합니다.
-    for (int i = 0; i < 4; i++) {
+    // 소수 부분을 실수로 변환합니다.
+    double fractionalPart = stod("0." + fractionalPartStr);
+    // 소수 부분을 이진법으로 변환하여 4자리까지 출력합니다.
+    for (int i = 0; i < 4; ++i) {
+        // 소수 부분에 2를 곱합니다.
         fractionalPart *= 2;
-        cout << fractionalPart / 10000;
-        fractionalPart %= 10000;
+        // 정수 부분을 추출하여 비트로 사용합니다.
+        int bit = static_cast<int>(fractionalPart);
+        cout << bit;
+        // 정수 부분을 제거하여 다음 자리 계산을 준비합니다.
+        fractionalPart -= bit;
     }
 
     return 0;
