@@ -1,36 +1,35 @@
-#include <iostream>
+#include<bits/stdc++.h>
+#define ll long long
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define PB push_back
+#define fi first
+#define se second
+#define all(v) (v).begin(), (v).end()
+#define For(i,j,k) for (int i=(int)(j);i<=(int)(k);i++)
+#define Rep(i,j,k) for (int i=(int)(j);i>=(int)(k);i--)
+#define debug1 puts("--@111%--")
+#define debug2 puts("--@222%--")
+#define debug3 puts("--@333%--")
+#define y1 ysgjowiaef
 using namespace std;
+
+#define INF 1987654321
 
 int main() {
     int n;
-    cin >> n;  // 사용자로부터 n을 입력받습니다.
 
-    int current_number = 9;  // 시작 숫자는 9로 설정합니다.
+    int cnt = 9;
 
-    // n번 반복하여 각 줄을 출력합니다.
-    for (int i = 0; i < n; i++) {
-        int number_to_print = current_number;  // 현재 줄에서 출력할 숫자를 설정합니다.
-        
-        // 각 줄에서 n개의 숫자를 출력합니다.
-        for (int j = 0; j < n; j++) {
-            cout << number_to_print << " ";  // 현재 숫자를 출력합니다.
-            number_to_print -= 2;  // 숫자를 2 감소시킵니다.
-            
-            // 숫자가 1보다 작아지면 9로 다시 설정합니다.
-            if (number_to_print < 1) {
-                number_to_print = 9;
-            }
+    cin >> n;
+
+    For(i, 1, n) {
+        For(j, 1, n) {
+            cout << cnt << " ";
+            cnt -= 2;
+            if(cnt == -1)
+                cnt = 9;
         }
-        
-        cout << endl;  // 한 줄의 숫자 출력을 마치고 줄바꿈을 합니다.
-        
-        current_number -= 2;  // 다음 줄의 시작 숫자를 2 감소시킵니다.
-        
-        // 시작 숫자가 1보다 작아지면 9로 다시 설정합니다.
-        if (current_number < 1) {
-            current_number = 9;
-        }
+        cout << endl;
     }
-
-    return 0;  // 프로그램을 종료합니다.
 }
