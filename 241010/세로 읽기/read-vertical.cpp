@@ -1,25 +1,28 @@
-#include <stdio.h>
-#include <math.h>
-#include <string.h>
+#include <iostream>
+#include <cstring>
 
-int n, m;
-
-char s[6][1003];
-int v[200];
-char d[200];
+using namespace std;
 
 int main() {
-  for (int i = 0; i < 5; i++) {
-    scanf("%s", s[i]);
-  }
+    // 최대 5개의 단어를 저장할 수 있는 배열을 선언합니다.
+    // 각 단어는 최대 15개의 문자를 가질 수 있습니다.
+    char words[5][16]; 
 
-  for (int i = 0; i < 15; i++) {
-    for (int j = 0; j < 5; j++) {
-      if (s[j][i] != 0) {
-        printf("%c", s[j][i]);
-      }
+    // 5개의 단어를 입력받습니다.
+    for (int i = 0; i < 5; i++) {
+        cin >> words[i];
     }
-  }
 
-  return 0;
+    // 각 열을 최대 단어 길이(15)까지 순회합니다.
+    for (int col = 0; col < 15; col++) {
+        // 각 단어를 순회합니다.
+        for (int row = 0; row < 5; row++) {
+            // 현재 문자가 널 종결자가 아닌 경우에만 출력합니다.
+            if (words[row][col] != '\0') {
+                cout << words[row][col];
+            }
+        }
+    }
+
+    return 0;
 }
