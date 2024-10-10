@@ -1,5 +1,4 @@
 #include <iostream>
-#include <iomanip> // 소수점 출력을 위한 라이브러리입니다.
 using namespace std;
 
 int main() {
@@ -26,7 +25,8 @@ int main() {
     double averageOfMultiples = static_cast<double>(sumOfMultiples) / countOfMultiples;
 
     // 소수 첫째 자리까지 출력하기 위해 fixed와 setprecision을 사용합니다.
-    cout << fixed << setprecision(1);
+    cout << fixed;
+    cout.precision(1);
     // 7의 배수의 개수, 합, 평균을 출력합니다.
     cout << countOfMultiples << " " << sumOfMultiples << " " << averageOfMultiples;
 
