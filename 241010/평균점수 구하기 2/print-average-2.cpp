@@ -1,5 +1,4 @@
 #include <iostream>
-#include <iomanip> // 소수점 출력을 위한 라이브러리입니다.
 
 using namespace std;
 
@@ -21,7 +20,8 @@ int main() {
     }
 
     // 평균을 소수 첫째 자리까지 출력하기 위해 설정합니다.
-    cout << fixed << setprecision(1);
+    cout << fixed;
+    cout.precision(1);
     // 평균 점수를 계산하여 출력합니다.
     cout << totalScore / numberOfStudents;
 
