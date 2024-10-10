@@ -1,5 +1,4 @@
 #include <iostream>
-#include <iomanip>
 
 using namespace std;
 
@@ -14,7 +13,8 @@ int main() {
     double miles = 0.4;
 
     // 소수 첫째 자리까지 반올림하여 출력하기 위해 설정합니다.
-    cout << fixed << setprecision(1);
+    cout << fixed;
+    cout.precision(1);
 
     // 야드를 cm로 변환하여 출력합니다.
     cout << yards << "yd = " << yards * YARD_TO_CM << "cm" << endl;
