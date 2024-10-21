@@ -3,7 +3,7 @@
 using namespace std;
 
 // 각 숫자를 문자열로 저장할 배열을 선언합니다.
-int numbers[35];
+string numbers[35];
 
 int main() {
     int numCount;
