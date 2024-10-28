@@ -1,27 +1,27 @@
 #include <iostream>
-#include <bits/stdc++.h>
+
+#define MAX_N 10
+
 using namespace std;
 
+// 변수 선언
 int n, k;
-int a[15];
+int coins[MAX_N];
+
+int ans;
 
 int main() {
+    // 입력:
     cin >> n >> k;
-    assert(1 <= n and n <= 10);
-    assert(1 <= k and k <= 1e8);
-    for(int i = 1; i <= n; i++) {
-        cin >> a[i];
-        assert(1 <= a[i] and a[i] <= 1e8);
-        if(i >= 2) {
-            assert(a[i] % a[i - 1] == 0);
-            assert(a[i] > a[i - 1]);
-        }
+    for(int i = 0; i < n; i++)
+        cin >> coins[i];
+
+    // 큰 동전부터 이용합니다.
+    for(int i = n - 1; i >= 0; i--) {
+        ans += k / coins[i];
+        k %= coins[i];
     }
-    int ans = 0;
-    for(int i = n; i >= 1; i--) {
-        ans += k / a[i];
-        k %= a[i];
-    }
+
     cout << ans;
     return 0;
 }
