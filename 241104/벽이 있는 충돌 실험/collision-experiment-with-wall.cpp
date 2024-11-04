@@ -7,7 +7,7 @@ int grid[MAX_N][MAX_N];
 int T, N, M;
 
 bool exist[MAX_N];
-pair <int,int> position[MAX_N];
+pair <int,int> position[MAX_N * MAX_N + 5];
 char direction[MAX_N];
 
 bool inRange(int r, int c) {
