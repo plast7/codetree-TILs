@@ -1,3 +1,4 @@
+import sys
 point = set()
 
 # A와 B 직사각형 처리
@@ -6,6 +7,8 @@ for i in range(2):
     for x in range(a, c):
         for y in range(b, d):
             point.add((x, y))
+            print(sys.getsizeof((x, y)))
+            sys.exit(0);
 
 # M 직사각형 처리
 e, f, g, h = map(int, input().split())
