@@ -3,6 +3,7 @@
 #define OVER 2222
 
 using namespace std;
+int secA[10000000] = {OVER}, secB[10000000] = {OVER};
 
 int main() {
     int na, mb;
@@ -10,7 +11,6 @@ int main() {
 
     int posA = 0, posB = 0, sa = 1;
     // int secA[10000] = {OVER}, secB[10000] = {OVER};
-    int secA[10000000] = {OVER}, secB[10000000] = {OVER};
     for (int i = 0; i < na; i++) {
         // int d, t;
         char d;
