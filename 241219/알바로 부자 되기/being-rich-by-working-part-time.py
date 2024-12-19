@@ -10,6 +10,7 @@ board.sort(key=lambda x: x[1])
 
 answer = 0
 
+dp[0] = board[0][2]
 for i in range(1, n):
     for j in range(i):
         if board[j][1] < board[i][0]:
