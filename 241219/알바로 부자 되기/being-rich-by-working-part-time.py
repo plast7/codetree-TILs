@@ -2,15 +2,13 @@ n = int(input())
 
 board = [[x for x in map(int, input().split())] for _ in range(n)]
 
-dp = [x[2] for x in board]
-
 
 board.sort(key=lambda x: x[1])
 
+dp = [x[2] for x in board]
 
 answer = 0
 
-dp[0] = board[0][2]
 for i in range(1, n):
     for j in range(i):
         if board[j][1] < board[i][0]:
